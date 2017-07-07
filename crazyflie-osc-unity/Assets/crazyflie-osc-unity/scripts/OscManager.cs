@@ -18,6 +18,7 @@ public class OscManager : MonoBehaviour {
 	public DistantOsc[] servers;
 
 	private OSCServer localServer;
+	private List<OSCClient> localClients = new List<OSCClient>();
 
 	public DistantOsc getOscDistantServer(string name) {
 		return Array.Find<DistantOsc> (this.servers, s => s.name == name);
@@ -42,7 +43,9 @@ public class OscManager : MonoBehaviour {
 		OscManager.DistantOsc oscDestination = this.getOscDistantServer (server);
 
 		IPAddress ip = IPAddress.Parse(oscDestination.ip);
-		return new UnityOSC.OSCClient (ip, (int)(oscDestination.port));
+		OSCClient c = new UnityOSC.OSCClient (ip, (int)(oscDestination.port));
+		this.localClients.Add (c);
+		return c;
 	}
 
 	private void OnPacketReceived(OSCServer server, OSCPacket packet) {
@@ -55,6 +58,16 @@ public class OscManager : MonoBehaviour {
 		this.localServer = new OSCServer (this.localPort);
 		Debug.LogFormat ("Server Listening on {0}", this.localPort.ToString ());
 		this.localServer.PacketReceivedEvent += this.OnPacketReceived;
+	}
+
+	void OnApplicationQuit() 
+	{
+		this.localServer.Close ();
+
+		foreach(OSCClient c in this.localClients)
+		{
+			c.Close ();
+		}
 	}
 
 }
