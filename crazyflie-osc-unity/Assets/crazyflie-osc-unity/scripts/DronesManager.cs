@@ -71,7 +71,7 @@ public class DronesManager : MonoBehaviour {
 		int id = 0;
 		foreach (DroneConfig droneConfig in this.dronesConfigs) {
 			GameObject go = GameObject.Instantiate (dronePrefab, Vector3.zero, Quaternion.identity);
-			go.name = "Drone_" + id.ToString ();
+			go.name = string.Format("Drone_{0}", id.ToString ());
 			Drone drone = go.GetComponent<Drone> ();
 			drone.id = id;
 			this._drones.Add (go);

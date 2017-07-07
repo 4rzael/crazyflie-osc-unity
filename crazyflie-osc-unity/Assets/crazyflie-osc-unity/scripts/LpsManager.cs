@@ -52,7 +52,7 @@ public class LpsManager : MonoBehaviour {
 		foreach (Vector3 nodePosition in this.lpsNodesPositions)
 		{
 			GameObject go = GameObject.Instantiate (lpsNodePrefab, nodePosition, Quaternion.identity);
-			go.name = "LpsNode_" + id.ToString ();
+			go.name = string.Format("LpsNode_{0}", id.ToString ());
 			go.GetComponent<LpsNode> ().id = id;
 			this._lpsNodes.Add (go);
 			++id;
@@ -62,7 +62,7 @@ public class LpsManager : MonoBehaviour {
 	public void sendConfigOsc () {
 		this.printNodes ();
 		int id = 0;
-		this.oscManager.sendOscMessage (this.oscClient, this.lpsOscTopic + "/get_node_number", this.lpsNodesPositions.Length);
+		this.oscManager.sendOscMessage (this.oscClient, string.Format("{0}/get_node_number", this.lpsOscTopic), this.lpsNodesPositions.Length);
 		foreach (Vector3 position in this.lpsNodesPositions) {
 			string topic = string.Format ("{0}/{1}/set_position", this.lpsOscTopic, id.ToString ());
 			this.oscManager.sendOscMessage (this.oscClient, topic, position.x, position.z, position.y);
