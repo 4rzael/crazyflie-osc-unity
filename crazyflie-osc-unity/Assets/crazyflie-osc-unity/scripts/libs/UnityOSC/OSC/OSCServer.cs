@@ -116,7 +116,7 @@ namespace UnityOSC
 			
 			try
 			{
-				_udpClient = new UdpClient(_localPort);
+				_udpClient = new UdpClient(new IPEndPoint(IPAddress.Parse("0.0.0.0"), _localPort));
 				_receiverThread = new Thread(new ThreadStart(this.ReceivePool));
 				_receiverThread.Start();
 			}
