@@ -1,6 +1,6 @@
-﻿# crazyflie-osc-unity
+# crazyflie-osc-unity
 
-# A Unity client for my crazyflie-osc server.
+A Unity client for my crazyflie-osc server.
 
 ## How to run it ?
 
