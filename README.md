@@ -25,3 +25,7 @@ An example scene is present.
 * Move your drone in the unity editor
 
 * Enjoy
+
+## TODO
+
+* Server part : Receive drones current positions, battery, etc...
