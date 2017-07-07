@@ -1,6 +1,6 @@
-﻿# crazyflie-osc-unity
+# crazyflie-osc-unity
 
-# A Unity client for my crazyflie-osc server.
+A Unity client for my crazyflie-osc server.
 
 ## How to run it ?
 
@@ -25,3 +25,13 @@ An example scene is present.
 * Move your drone in the unity editor
 
 * Enjoy
+
+## TODO
+
+* Server part : Receive drones current positions, battery, etc...
+
+* Clean the code
+
+* Add documentation
+
+* Make it a Unity package
