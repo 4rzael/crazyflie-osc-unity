@@ -60,7 +60,7 @@ public class OscManager : MonoBehaviour {
 		this.localServer.PacketReceivedEvent += this.OnPacketReceived;
 	}
 
-	void OnApplicationQuit() 
+	public void OnApplicationQuit() 
 	{
 		this.localServer.Close ();
 

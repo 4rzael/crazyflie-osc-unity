@@ -14,7 +14,6 @@ class LpsManagerEditor : Editor {
 			lpsManager.Awake ();
 		}
 
-
 		if (GUILayout.Button ("Recreate nodes")) {
 			lpsManager.recreateNodes ();
 		}

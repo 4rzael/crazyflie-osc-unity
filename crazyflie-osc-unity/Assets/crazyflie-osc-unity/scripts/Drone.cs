@@ -13,8 +13,8 @@ public class Drone : MonoBehaviour {
 	public OscManager oscManager { get; set; }
 	public string baseTopic { get; set; }
 
-	private bool syncSend = false;
-	private bool syncReceive = false;
+	private bool _syncPosition = false;
+	private Color _color;
 
 	public void connect()
 	{
@@ -24,18 +24,11 @@ public class Drone : MonoBehaviour {
 		this.oscManager.sendOscMessage (this.oscClient, topic, uri);
 	}
 
-	public void startSyncSend() {
-		this.syncSend = true;
+	public void startPositionSync() {
+		this._syncPosition = true;
 	}
-	public void stopSyncSend() {
-		this.syncSend = false;
-	}
-
-	public void startSyncReceive() {
-		this.syncReceive = true;
-	}
-	public void stopSyncReceive() {
-		this.syncReceive = false;
+	public void stopPositionSync() {
+		this._syncPosition = false;
 	}
 
 	public void resetKalmanFilter() {
@@ -53,9 +46,14 @@ public class Drone : MonoBehaviour {
 		return drone1.GetComponent<Drone> ().id - drone2.GetComponent<Drone> ().id;
 	}
 
+	public void setColor(Color c) {
+		this._color = c;
+		gameObject.GetComponentInChildren<MeshRenderer> ().material.color = c;
+	}
+
 	void Update() {
 		if (this.oscManager) {
-			if (this.syncSend) {
+			if (this._syncPosition) {
 				string topic = string.Format ("{0}/{1}/goal", this.baseTopic, this.id.ToString());
 				this.oscManager.sendOscMessage (this.oscClient, topic, transform.position.x, transform.position.z, transform.position.y, 0);
 			}

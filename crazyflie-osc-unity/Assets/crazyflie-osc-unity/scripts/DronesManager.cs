@@ -7,17 +7,6 @@ using System;
 [ExecuteInEditMode]
 public class DronesManager : MonoBehaviour {
 
-	[Serializable]
-	public class DroneConfig
-	{
-		public string radio_uri;
-
-		public DroneConfig()
-		{
-			radio_uri = "radio://0/80/2M/E7E7E7E7E7";
-		}
-	}
-
 	public GameObject dronePrefab;
 	public string droneOscTopic = "/crazyflie";
 	public DroneConfig[] dronesConfigs;
@@ -26,6 +15,18 @@ public class DronesManager : MonoBehaviour {
 	private OscManager oscManager;
 	private UnityOSC.OSCClient oscClient;
 
+	[Serializable]
+	public class DroneConfig
+	{
+		public string radio_uri;
+		public Color color;
+		public int viz_id; // ONLY USED BY EDITOR
+
+		public DroneConfig()
+		{
+			radio_uri = "radio://0/80/2M/E7E7E7E7E7";	
+		}
+	}
 
 	private void cleanDronesList () {
 		this._drones.RemoveAll (n => n == null);
@@ -73,6 +74,7 @@ public class DronesManager : MonoBehaviour {
 			GameObject go = GameObject.Instantiate (dronePrefab, Vector3.zero, Quaternion.identity);
 			go.name = string.Format("Drone_{0}", id.ToString ());
 			Drone drone = go.GetComponent<Drone> ();
+			drone.setColor (droneConfig.color);
 			drone.id = id;
 			this._drones.Add (go);
 			++id;
@@ -80,6 +82,8 @@ public class DronesManager : MonoBehaviour {
 
 		this.configDrones ();
 	}
+
+/* PROXIES TO DRONES FUNCTIONS */
 
 	public void connectDronesOsc () {
 		this.cleanDronesList ();
@@ -92,6 +96,20 @@ public class DronesManager : MonoBehaviour {
 		this.cleanDronesList ();
 		foreach (GameObject drone in this._drones) {
 			drone.GetComponent<Drone> ().resetKalmanFilter ();
+		}
+	}
+
+	public void startPositionSync() {
+		this.cleanDronesList ();
+		foreach (GameObject drone in this._drones) {
+			drone.GetComponent<Drone> ().startPositionSync ();
+		}
+	}
+
+	public void stopPositionSync() {
+		this.cleanDronesList ();
+		foreach (GameObject drone in this._drones) {
+			drone.GetComponent<Drone> ().stopPositionSync ();
 		}
 	}
 
@@ -110,7 +128,7 @@ public class DronesManager : MonoBehaviour {
 		}
 
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 	}

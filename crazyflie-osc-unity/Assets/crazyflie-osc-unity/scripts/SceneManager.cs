@@ -15,7 +15,7 @@ public class SceneManager : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Start () {
+	public void Start () {
 		this.system_initialized = false;
 		this._oscManager = GameObject.Find ("OscManager").GetComponent<OscManager> ();		
 		this._lpsManager = GameObject.Find ("LpsManager").GetComponent<LpsManager> ();
@@ -47,5 +47,11 @@ public class SceneManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
+	}
+
+	public void Stop() {
+		this._lpsManager.removeNodes ();
+		this._dronesManager.removeDrones ();
+		this._oscManager.OnApplicationQuit ();
 	}
 }
