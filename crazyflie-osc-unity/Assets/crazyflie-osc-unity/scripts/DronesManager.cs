@@ -34,8 +34,7 @@ public class DronesManager : MonoBehaviour {
 
 	private void initDrones () {
 		foreach (GameObject drone in this._drones) {
-			drone.GetComponent<Drone> ().oscClient = this.oscClient;
-			drone.GetComponent<Drone> ().oscManager = this.oscManager;
+			drone.GetComponent<Drone> ().init(this.oscClient, this.oscManager);
 		}
 	}
 

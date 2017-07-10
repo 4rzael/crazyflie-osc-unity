@@ -122,4 +122,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
-  radio_uri: 
+  realPositionMarkerPrefab: {fileID: 1629452118077940, guid: 18063050497e0bb43828feba7a7c5f58,
+    type: 2}

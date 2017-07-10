@@ -5,6 +5,8 @@ using System;
 using UnityOSC;
 using System.Reflection;
 using System.Net;
+using System.Text.RegularExpressions;
+
 
 public class OscManager : MonoBehaviour {
 	[Serializable]
@@ -14,11 +16,19 @@ public class OscManager : MonoBehaviour {
 		public short port;
 	}
 
+	public delegate void OscSubscribeCallback(string topic, OSCPacket packet, GroupCollection path_args);
+	private struct OscSubscriber {
+		public Regex topicRegex;
+		public OscSubscribeCallback callback;
+	}
+
+	public string localIP = "127.0.0.1";
 	public short localPort = 6006;
 	public DistantOsc[] servers;
 
-	private OSCServer localServer;
-	private List<OSCClient> localClients = new List<OSCClient>();
+	private OSCServer _localServer;
+	private List<OscSubscriber> _serverSubscriber = new List<OscSubscriber>();
+	private List<OSCClient> _localClients = new List<OSCClient>();
 
 	public DistantOsc getOscDistantServer(string name) {
 		return Array.Find<DistantOsc> (this.servers, s => s.name == name);
@@ -44,27 +54,48 @@ public class OscManager : MonoBehaviour {
 
 		IPAddress ip = IPAddress.Parse(oscDestination.ip);
 		OSCClient c = new UnityOSC.OSCClient (ip, (int)(oscDestination.port));
-		this.localClients.Add (c);
+		this._localClients.Add (c);
 		return c;
 	}
 
 	private void OnPacketReceived(OSCServer server, OSCPacket packet) {
-		Debug.LogFormat ("OSC Message received on {0} : {1}",
-			packet.Address.ToString(),
-			packet.Data.ToString());
+		bool handled = false;
+
+		foreach (OscSubscriber sub in this._serverSubscriber) {
+			Match m = sub.topicRegex.Match (packet.Address);
+			if (m.Success) {
+				handled = true;
+				sub.callback(packet.Address, packet, m.Groups);
+			}
+		}
+
+		if (!handled) { // If not handled => print it
+			Debug.LogFormat ("OSC Message received on {0}", packet.Address);
+		}
 	}
 
 	void Awake() {
-		this.localServer = new OSCServer (this.localPort);
+		this._localServer = new OSCServer (this.localPort);
 		Debug.LogFormat ("Server Listening on {0}", this.localPort.ToString ());
-		this.localServer.PacketReceivedEvent += this.OnPacketReceived;
+		this._localServer.PacketReceivedEvent += this.OnPacketReceived;
 	}
 
-	public void OnApplicationQuit() 
-	{
-		this.localServer.Close ();
+	public void OscSubscribe(string topicRegexLike, OscSubscribeCallback callback) {
+		Debug.LogFormat ("OSC SUBSCRIBE ON {0}", topicRegexLike);
+		topicRegexLike = "^" + topicRegexLike + "$";
+		OscSubscriber sub = new OscSubscriber ();
+		string regexified = Regex.Replace(topicRegexLike, "{(.+?)}", "(?P<$1>.+)");
+		Debug.LogFormat ("REGEXIFIED : {0}", regexified);
+		sub.topicRegex = new Regex(regexified);
+		sub.callback = callback;
+		this._serverSubscriber.Add (sub);
+	}
 
-		foreach(OSCClient c in this.localClients)
+	public void Stop() 
+	{
+		this._localServer.Close ();
+
+		foreach(OSCClient c in this._localClients)
 		{
 			c.Close ();
 		}

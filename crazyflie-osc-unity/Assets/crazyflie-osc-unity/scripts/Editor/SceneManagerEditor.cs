@@ -19,5 +19,9 @@ class SceneManagerEditor : Editor {
 			manager.Stop ();
 		}
 
+		if (GUILayout.Button ("EMERGENCY")) {
+			manager.EMERGENCY ();
+		}
+
 	}
 }
