@@ -111,7 +111,7 @@ public class DronesManager : MonoBehaviour {
 			drone.GetComponent<Drone> ().stopPositionSync ();
 		}
 	}
-
+		
 	// Use this for initialization
 	public void Awake () {
 		this.findDrones ();

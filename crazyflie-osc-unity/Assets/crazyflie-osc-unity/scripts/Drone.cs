@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityOSC;
+using UnityEngine.UI;
 
-[ExecuteInEditMode]
 public class Drone : MonoBehaviour {
 
 	public int id;
@@ -12,13 +12,15 @@ public class Drone : MonoBehaviour {
 	public GameObject realPositionMarkerPrefab;
 
 	private GameObject _realPositionMarker;
+	private Slider _batterySlider;
 	private OSCClient _oscClient;
 	private OscManager _oscManager;
 
 	private bool _syncPosition = false;
 	private Color _color;
 
-	private Vector3 _realPosition;
+	private Vector3 _realPosition = Vector3.zero;
+	private float _battery = 0.0f;
 
 	public void connect()
 	{
@@ -29,6 +31,8 @@ public class Drone : MonoBehaviour {
 	}
 
 	public void startPositionSync() {
+		if (this._realPosition != Vector3.zero)
+			transform.position = this._realPosition;
 		this._syncPosition = true;
 	}
 	public void stopPositionSync() {
@@ -73,26 +77,32 @@ public class Drone : MonoBehaviour {
 
 		this._oscManager.OscSubscribe(string.Format("/log/{0}/position", this.id),
 			delegate(string topic, OSCPacket packet, System.Text.RegularExpressions.GroupCollection path_args) {
-//				Debug.LogFormat("POSITION FOUND : {0} {0} {0}", packet.Data[0], packet.Data[1], packet.Data[2]);
 				this._realPosition = new Vector3(
 					(float)packet.Data[0],
-					(float)packet.Data[2],
+					(float)packet.Data[2], // As always, y and z are inverted
 					(float)packet.Data[1]);
 		});
+
+		this._oscManager.OscSubscribe (string.Format ("/log/{0}/battery", this.id),
+			delegate(string topic, OSCPacket packet, System.Text.RegularExpressions.GroupCollection path_args) {
+				float battery = (float)packet.Data [0];
+				this._battery = ((battery - 3.0f) / 1.1f) * 100.0f;
+			});
 	}
 
 	void Start() {
-		this._realPosition = Vector3.zero;
 		if (this.realPositionMarkerPrefab) {
 			this._realPositionMarker = GameObject.Instantiate (this.realPositionMarkerPrefab,
 				gameObject.GetComponent<Transform> ().position,
 				Quaternion.identity);
 			setRealPositionMarkerColor ();
 		}
+		this._batterySlider = gameObject.GetComponentInChildren<Slider>();
 	}
 
 	void Update() {
 		this.setRealPositionMarkerPosition(this._realPosition);
+		this._batterySlider.value = this._battery;
 
 		if (this._oscManager) {
 			if (this._syncPosition) {
@@ -100,5 +110,10 @@ public class Drone : MonoBehaviour {
 				this._oscManager.sendOscMessage (this._oscClient, topic, transform.position.x, transform.position.z, transform.position.y, 0);
 			}
 		}
+	}
+
+	void OnDestroy() {
+		if (this._realPositionMarker)
+			GameObject.DestroyImmediate (this._realPositionMarker.gameObject);
 	}
 }
