@@ -28,8 +28,6 @@ An example scene is present.
 
 ## TODO
 
-* Server part : Receive drones current positions, battery, etc...
-
 * Clean the code
 
 * Add documentation
