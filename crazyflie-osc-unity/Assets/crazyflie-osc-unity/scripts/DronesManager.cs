@@ -82,6 +82,11 @@ public class DronesManager : MonoBehaviour {
 		this.configDrones ();
 	}
 
+    public List<GameObject> getDrones ()
+    {
+        return this._drones;
+    }
+
 /* PROXIES TO DRONES FUNCTIONS */
 
 	public void connectDronesOsc () {

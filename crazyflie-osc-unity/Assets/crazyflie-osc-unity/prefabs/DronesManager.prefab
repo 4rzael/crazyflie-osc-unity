@@ -34,7 +34,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1703137360678010}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.49168634, y: -1.6381543, z: 0.65505266}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -51,8 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 107dc9b53b8cae24c853f791d9d084f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dronePrefab: {fileID: 1417553724295450, guid: 311d19c51f51ba640bdc6d299d21fda4,
+  dronePrefab: {fileID: 1896065288343814, guid: 91518061a9734be4b93e8756ff03c1cf,
     type: 2}
   droneOscTopic: /crazyflie
-  dronesConfigs:
-  - radio_uri: radio://0/80/2M/E7E7E7E704
+  dronesConfigs: []

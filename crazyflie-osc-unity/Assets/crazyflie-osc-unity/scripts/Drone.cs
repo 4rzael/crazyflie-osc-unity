@@ -95,6 +95,7 @@ public class Drone : MonoBehaviour {
 			this._realPositionMarker = GameObject.Instantiate (this.realPositionMarkerPrefab,
 				gameObject.GetComponent<Transform> ().position,
 				Quaternion.identity);
+            this._realPositionMarker.name = string.Format("RealPositionMarker_{0}", this.id);
 			setRealPositionMarkerColor ();
 		}
 		this._batterySlider = gameObject.GetComponentInChildren<Slider>();
@@ -104,7 +105,7 @@ public class Drone : MonoBehaviour {
 		this.setRealPositionMarkerPosition(this._realPosition);
 		this._batterySlider.value = this._battery;
 
-		if (this._oscManager) {
+		if (this._oscManager != null) {
 			if (this._syncPosition) {
 				string topic = string.Format ("{0}/{1}/goal", this.baseTopic, this.id.ToString());
 				this._oscManager.sendOscMessage (this._oscClient, topic, transform.position.x, transform.position.z, transform.position.y, 0);
