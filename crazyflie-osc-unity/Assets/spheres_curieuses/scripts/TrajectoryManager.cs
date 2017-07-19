@@ -10,12 +10,14 @@ public class TrajectoryManager : MonoBehaviour {
     {
         HOVER = 0,
         MULTI_LINES = 2,
+        JUGGLE_3D = 3,
     }
 
     private Dictionary<TrajectoryType, Type> _possibleTrajectories = new Dictionary<TrajectoryType, Type>
         {
             {TrajectoryType.HOVER, typeof(TrajectoryHover)},
-            { TrajectoryType.MULTI_LINES, typeof(TrajectoryMultiLines)}
+            { TrajectoryType.MULTI_LINES, typeof(TrajectoryMultiLines)},
+            { TrajectoryType.JUGGLE_3D, typeof(TrajectoryJuggle3D)}
         };
 
     private Trajectory currentTrajectory;

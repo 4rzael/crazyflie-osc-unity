@@ -128,7 +128,7 @@ public class TrajectoryMultiLines : Trajectory
 
             this.setPosition(newPosition);
 
-            _currentDistance = _currentDistance + deltaPos.magnitude * (Time.fixedDeltaTime > 0 ? 1 : -1);
+            _currentDistance = _currentDistance + deltaPos.magnitude * ((Time.fixedDeltaTime * speed) > 0 ? 1 : -1);
             // if any trajectory boundary is crossed => end of trajectory
             if (_currentDistance >= _totalDistance)
             {
