@@ -43,16 +43,17 @@ public class SceneManager : MonoBehaviour {
 		_dronesManager.configDrones ();
 		_dronesManager.connectDronesOsc ();
 
-		yield return new WaitForSeconds (5);
-		print ("Sending LPS configs");
-		_lpsManager.sendConfigOsc ();
-		yield return new WaitForSeconds (1);
-		print ("Reseting kalman filters");
-		_dronesManager.resetKalmanFilters ();
-		print ("Waiting for kalman filters to converge");
-		yield return new WaitForSeconds (10);
-		print ("SYSTEM OK");
-		this.system_initialized = true;
+        this.system_initialized = true;
+		//yield return new WaitForSeconds (5);
+		//print ("Sending LPS configs");
+		//_lpsManager.sendConfigOsc ();
+		//yield return new WaitForSeconds (1);
+		//print ("Reseting kalman filters");
+		//_dronesManager.resetKalmanFilters ();
+		//print ("Waiting for kalman filters to converge");
+		//yield return new WaitForSeconds (10);
+		//print ("SYSTEM OK");
+		//this.system_initialized = true;
 	}
 
 	public void EMERGENCY() {

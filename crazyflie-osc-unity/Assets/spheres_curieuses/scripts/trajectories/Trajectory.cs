@@ -5,10 +5,33 @@ using UnityEngine;
 public class Trajectory : MonoBehaviour {
 
     protected Dictionary<string, object> _variables = new Dictionary<string, object>();
+    protected bool started = false;
+
+    protected delegate bool VariableSetter<T>(T variable);
+    private Dictionary<string, object> _setters = new Dictionary<string, object>();
+
+    protected void addSetter<T>(string variableName, VariableSetter<T> setter)
+    {
+        _setters[variableName] = setter;
+    }
+
+    protected void removeSetter(string variableName)
+    {
+        _setters.Remove(variableName);
+    }
 
     public void setVariable<T>(string name, T value)
     {
-        _variables[name] = value;
+        bool shouldSetVariable = true;
+        if (_setters.ContainsKey(name)) // call the setter first
+        {
+            VariableSetter<T> setter = (VariableSetter<T>)_setters[name];
+            shouldSetVariable = setter(value);
+        }
+        if (shouldSetVariable)
+        {
+            _variables[name] = value;
+        }
     }
 
     public T getVariable<T>(string name)
@@ -32,8 +55,43 @@ public class Trajectory : MonoBehaviour {
         return true;
     }
 
-	// Use this for initialization
-	void Start () {
+    public void startTrajectory()
+    {
+        this.started = true;
+        this.onStart();
+    }
+    protected virtual void onStart() { }
+
+    protected void stopTrajectory()
+    {
+        this.started = false;
+        this.onStop();
+    }
+    protected virtual void onStop() { }
+
+    // SPEED FUNCTION STUFF 
+    public delegate float SpeedFunction(float x);
+    /*
+     * Speed distribution over time.
+     * Must be a function that integrates to 1 in the [0;1] space
+     * (Later, we may want to computationaly approximate the integral in order to remove this limitation)
+     */
+    private SpeedFunction _speedFunction = x => 1.0f;
+
+    private bool setSpeedFunction(SpeedFunction func)
+    {
+        this._speedFunction = func;
+        return true; // Does not override default setter
+    }
+
+    protected float getSpeedAtTime(float t)
+    {
+        return this._speedFunction(t);
+    }
+
+    // Use this for initialization
+    protected virtual void Awake () {
+        this.addSetter<SpeedFunction>("speed_function", this.setSpeedFunction);
 	}
 	
 	// Update is called once per frame

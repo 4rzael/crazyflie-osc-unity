@@ -34,8 +34,19 @@ public class Maestro : MonoBehaviour {
         IEnumerable<TrajectoryManager> drones = _dronesManager.getDrones().Select(d => d.GetComponent<TrajectoryManager>());
         foreach (TrajectoryManager drone in drones)
         {
-            drone.setTrajectory(TrajectoryManager.TrajectoryType.HOVER);
-            drone.getTrajectory().setVariable("position", new Vector3(10f, 10f, 10f));
+            //drone.setTrajectory(TrajectoryManager.TrajectoryType.HOVER);
+            //drone.getTrajectory().setVariable("position", new Vector3(10f, 10f, 10f));
+
+            drone.setTrajectory(TrajectoryManager.TrajectoryType.MULTI_LINES);
+            drone.getTrajectory().setVariable("positions", new List<Vector3> {
+                new Vector3 (1f, 1f, 1f),
+                new Vector3 (3f, 1f, 1f),
+                new Vector3 (2f, 3f, 1f),
+            });
+            drone.getTrajectory().setVariable("time", 5.0f);
+            drone.getTrajectory().setVariable("loop", true);
+            //drone.getTrajectory().setVariable<Trajectory.SpeedFunction>("speed_function", x => 3 * Mathf.Pow(x, 2));
+            drone.getTrajectory().startTrajectory();
         }
     }
 }

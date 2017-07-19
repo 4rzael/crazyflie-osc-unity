@@ -9,11 +9,13 @@ public class TrajectoryManager : MonoBehaviour {
     public enum TrajectoryType
     {
         HOVER = 0,
+        MULTI_LINES = 2,
     }
 
     private Dictionary<TrajectoryType, Type> _possibleTrajectories = new Dictionary<TrajectoryType, Type>
         {
             {TrajectoryType.HOVER, typeof(TrajectoryHover)},
+            { TrajectoryType.MULTI_LINES, typeof(TrajectoryMultiLines)}
         };
 
     private Trajectory currentTrajectory;
