@@ -9,15 +9,17 @@ public class TrajectoryManager : MonoBehaviour {
     public enum TrajectoryType
     {
         HOVER = 0,
-        MULTI_LINES = 2,
-        JUGGLE_3D = 3,
+        MULTI_LINES = 1,
+        JUGGLE_3D = 2,
+        CIRCLE = 3,
     }
 
     private Dictionary<TrajectoryType, Type> _possibleTrajectories = new Dictionary<TrajectoryType, Type>
         {
             {TrajectoryType.HOVER, typeof(TrajectoryHover)},
-            { TrajectoryType.MULTI_LINES, typeof(TrajectoryMultiLines)},
-            { TrajectoryType.JUGGLE_3D, typeof(TrajectoryJuggle3D)}
+            {TrajectoryType.MULTI_LINES, typeof(TrajectoryMultiLines)},
+            {TrajectoryType.JUGGLE_3D, typeof(TrajectoryJuggle3D)},
+            {TrajectoryType.CIRCLE, typeof(TrajectoryCircle)},
         };
 
     private Trajectory currentTrajectory;

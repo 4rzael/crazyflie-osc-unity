@@ -66,7 +66,7 @@ public class TrajectoryMultiLines : Trajectory
         base.onStart();
 
         this._points = new List<Point>();
-        if (this.hasVariables("positions", "loop"))
+        if (this.hasVariables("positions"))
         {
             IEnumerable<Vector3> positions = this.getVariable<IEnumerable<Vector3>>("positions");
             Vector3 lastPos = new Vector3(0,0,0);
@@ -83,7 +83,7 @@ public class TrajectoryMultiLines : Trajectory
                 _points.Add(new Point(newPos, _totalDistance));
                 lastPos = newPos;
             }
-            if (this.getVariable<bool>("loop"))
+            if (this.getVariable("loop", false))
             {
                 _totalDistance += (_points[0].position - lastPos).magnitude;
                 _points.Add(new Point(_points[0].position, _totalDistance));
@@ -114,10 +114,11 @@ public class TrajectoryMultiLines : Trajectory
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (this.started && this.hasVariables("time", "loop"))
+        if (this.started && this.hasVariables("time"))
         {
             float timeNeeded = this.getVariable<float>("time");
-            bool loop = this.getVariable<bool>("loop");
+            bool loop = this.getVariable("loop", false);
+
 
             Point lastPoint = _points[_prevPointIdx];
             Point nextPoint = _points[_nextPointIdx];
