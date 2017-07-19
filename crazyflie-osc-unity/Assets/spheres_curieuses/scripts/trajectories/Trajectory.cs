@@ -74,7 +74,7 @@ public class Trajectory : MonoBehaviour {
     /*
      * Speed distribution over time.
      * Must be a function that integrates to 1 in the [0;1] space
-     * (Later, we may want to computationaly approximate the integral in order to remove this limitation)
+     * TODO : computationaly approximate the integral in order to remove this limitation
      */
     private SpeedFunction _speedFunction = x => 1.0f;
 

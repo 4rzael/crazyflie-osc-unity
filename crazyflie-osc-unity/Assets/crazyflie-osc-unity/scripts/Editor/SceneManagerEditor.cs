@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 
 [CustomEditor(typeof(SceneManager))]
 class SceneManagerEditor : Editor {
-	public override void OnInspectorGUI() {
+    void OnEnable()
+    {
+        EditorUtility.SetDirty(this);
+    }
 
-		SceneManager manager = (SceneManager)target;
-
-		DrawDefaultInspector();
+    public override void OnInspectorGUI() {
+        SceneManager manager = (SceneManager)target;
 
 		if (GUILayout.Button ("Start all")) {
 			manager.Start ();
@@ -23,5 +26,12 @@ class SceneManagerEditor : Editor {
 			manager.EMERGENCY ();
 		}
 
+        manager.shouldInitialize = EditorGUILayout.Toggle("should initialize ?", manager.shouldInitialize);
+
+        if (GUI.changed)
+        {
+            EditorUtility.SetDirty(manager);
+            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        }
 	}
 }
