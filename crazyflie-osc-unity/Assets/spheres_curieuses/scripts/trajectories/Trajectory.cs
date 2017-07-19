@@ -10,6 +10,7 @@ public class Trajectory : MonoBehaviour {
     protected delegate bool VariableSetter<T>(T variable);
     private Dictionary<string, object> _setters = new Dictionary<string, object>();
 
+
     protected void addSetter<T>(string variableName, VariableSetter<T> setter)
     {
         _setters[variableName] = setter;
@@ -45,6 +46,11 @@ public class Trajectory : MonoBehaviour {
             throw new System.Exception(string.Format("Variable {0} does not exist", name));
         }
     }
+    public T getVariable<T>(string name, T defaultValue)
+    {
+        return _variables.ContainsKey(name) ? getVariable<T>(name) : defaultValue;
+    }
+
 
 
     public bool hasVariables(params string[] args)
@@ -59,6 +65,7 @@ public class Trajectory : MonoBehaviour {
     {
         this.started = true;
         this.onStart();
+        this.render();
     }
     protected virtual void onStart() { }
 
@@ -66,8 +73,13 @@ public class Trajectory : MonoBehaviour {
     {
         this.started = false;
         this.onStop();
+        this.unrender();
     }
     protected virtual void onStop() { }
+
+    // RENDERING STUFF
+    public virtual void render() { }
+    public virtual void unrender() { }
 
     // SPEED FUNCTION STUFF 
     public delegate float SpeedFunction(float x);
@@ -97,4 +109,9 @@ public class Trajectory : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {		
 	}
+
+    private void OnApplicationQuit()
+    {
+        stopTrajectory();
+    }
 }

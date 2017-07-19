@@ -15,6 +15,8 @@ public class TrajectoryMultiLines : Trajectory
     private int _prevPointIdx;
     private int _nextPointIdx;
 
+    private GameObject _renderer;
+
     private struct Point
     {
         public Vector3 position;
@@ -23,6 +25,32 @@ public class TrajectoryMultiLines : Trajectory
         public Point(Vector3 p, float d) { position = p; distance = d; }
         public Point(Point pt) { position = pt.position; distance = pt.distance; }
         public override string ToString() { return string.Format("Point<{0} {1} {2}, \t {3}>", position.x, position.y, position.z, distance); }
+    }
+
+    public override void render()
+    {
+        if (this._points == null) return;
+        if (_renderer == null)
+        {
+            _renderer = new GameObject("line_renderer", typeof(LineRenderer));
+        }
+        print(this._points.Select(pt => pt.ToString()).Aggregate((pt1, pt2) => pt1 + " " + pt2));
+        print(this._points.Select(pt => pt.position).ToArray().Count());
+        LineRenderer line = _renderer.GetComponent<LineRenderer>();
+        line.positionCount = this._points.Count();
+        line.SetPositions(this._points.Select(pt => pt.position).ToArray());
+        line.widthCurve = AnimationCurve.Linear(0, 0.1f, 1, 0.1f);
+        line.material = gameObject.GetComponentInChildren<Renderer>().material;
+        line.loop = this.getVariable<bool>("loop", false);
+    }
+
+    public override void unrender()
+    {
+        if (_renderer != null)
+        {
+            GameObject.Destroy(_renderer);
+            _renderer = null;
+        }
     }
 
     // Use this for initialization
@@ -137,6 +165,5 @@ public class TrajectoryMultiLines : Trajectory
     protected override void onStop()
     {
         base.onStop();
-        Debug.LogError("OVER");
     }
 }

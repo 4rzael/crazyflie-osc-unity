@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 33009324580347324}
   - component: {fileID: 23586901063046172}
   m_Layer: 0
-  m_Name: default
+  m_Name: mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
