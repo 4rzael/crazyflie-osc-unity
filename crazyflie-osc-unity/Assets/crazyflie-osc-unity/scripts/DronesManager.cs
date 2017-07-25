@@ -87,6 +87,11 @@ public class DronesManager : MonoBehaviour {
         return this._drones;
     }
 
+    public GameObject getDroneById (int id)
+    {
+        return getDrones().Find(go => go.GetComponent<Drone>().id == id);
+    }
+
 /* PROXIES TO DRONES FUNCTIONS */
 
 	public void connectDronesOsc () {

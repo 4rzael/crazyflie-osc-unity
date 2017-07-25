@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Drone : MonoBehaviour {
 
-	public int id;
+    public int id;
 	public string radio_uri { get; set; }
 	public string baseTopic { get; set; }
 	public GameObject realPositionMarkerPrefab;
@@ -19,10 +19,18 @@ public class Drone : MonoBehaviour {
 	private bool _syncPosition = false;
 	private Color _color;
 
-	private Vector3 _realPosition = Vector3.zero;
+	public Vector3 _realPosition = Vector3.zero;
 	private float _battery = 0.0f;
 
-	public void connect()
+    public bool disableSendingCommands = false;
+
+    // event callbacks
+    public delegate void PositionCallback(Vector3 position);
+    public delegate void BatteryCallback(float battery);
+    private List<PositionCallback> _positionCallbacks = new List<PositionCallback>();
+    private List<BatteryCallback> _batteryCallbacks = new List<BatteryCallback>();
+
+    public void connect()
 	{
 		string topic = string.Format ("{0}/{1}/add", this.baseTopic, this.id.ToString());
 		string uri = this.radio_uri;
@@ -44,9 +52,9 @@ public class Drone : MonoBehaviour {
 	}
 
 	private IEnumerator resetKalmanFilterCoroutine() {
-		this._oscManager.sendOscMessage(this._oscClient, string.Format ("/param/{0}/resetEstimation/set", this.id), 1);
+		this._oscManager.sendOscMessage(this._oscClient, string.Format ("/param/{0}/kalman/resetEstimation/set", this.id), 1);
 		yield return new WaitForSeconds (0.1f);
-		this._oscManager.sendOscMessage(this._oscClient, string.Format ("/param/{0}/resetEstimation/set", this.id), 0);	
+		this._oscManager.sendOscMessage(this._oscClient, string.Format ("/param/{0}/kalman/resetEstimation/set", this.id), 0);	
 	}
 
 	public static int compareDrones(GameObject drone1, GameObject drone2)
@@ -81,16 +89,33 @@ public class Drone : MonoBehaviour {
 					(float)packet.Data[0],
 					(float)packet.Data[2], // As always, y and z are inverted
 					(float)packet.Data[1]);
-		});
+                foreach (PositionCallback cb in _positionCallbacks) // call callbacks
+                {
+                    cb(this._realPosition);
+                }
+            });
 
 		this._oscManager.OscSubscribe (string.Format ("/log/{0}/battery", this.id),
 			delegate(string topic, OSCPacket packet, System.Text.RegularExpressions.GroupCollection path_args) {
 				float battery = (float)packet.Data [0];
 				this._battery = ((battery - 3.0f) / 1.1f) * 100.0f;
-			});
+                foreach (BatteryCallback cb in _batteryCallbacks) // call callbacks
+                {
+                    cb(this._battery);
+                }
+            });
 	}
 
-	void Start() {
+    public void EMERGENCY()
+    {
+        this._oscManager.sendOscMessage(this._oscClient, "/emergency", 1);
+    }
+
+    // CALLBACKS
+    public void onPosition(PositionCallback cb) { _positionCallbacks.Add(cb); }
+    public void onBattery(BatteryCallback cb) { _batteryCallbacks.Add(cb); }
+
+    void Start() {
 		if (this.realPositionMarkerPrefab) {
 			this._realPositionMarker = GameObject.Instantiate (this.realPositionMarkerPrefab,
 				gameObject.GetComponent<Transform> ().position,
@@ -106,7 +131,7 @@ public class Drone : MonoBehaviour {
 		this._batterySlider.value = this._battery;
 
 		if (this._oscManager != null) {
-			if (this._syncPosition) {
+			if (this.disableSendingCommands == false && this._syncPosition) {
 				string topic = string.Format ("{0}/{1}/goal", this.baseTopic, this.id.ToString());
 				this._oscManager.sendOscMessage (this._oscClient, topic, transform.position.x, transform.position.z, transform.position.y, 0);
 			}

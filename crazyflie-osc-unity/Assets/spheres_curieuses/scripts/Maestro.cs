@@ -22,7 +22,7 @@ public class Maestro : MonoBehaviour {
         if (firstTimeSinceSceneInit && _sceneManager.isInitialized())
         {
             firstTimeSinceSceneInit = false;
-            this.startChoregraphy();
+            // this.startChoregraphy();
         }
 	}
 

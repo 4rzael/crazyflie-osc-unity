@@ -26,13 +26,14 @@ public class SceneManager : MonoBehaviour {
 		this._lpsManager = GameObject.Find ("LpsManager").GetComponent<LpsManager> ();
 		this._dronesManager = GameObject.Find ("DronesManager").GetComponent<DronesManager> ();
 
+        // this._oscManager.OscSubscribe("/test/tick", (address, packet, path_args) => { print(packet.Data[0].ToString()); });
+
 		StartCoroutine (StartingCoroutine ());
 	}
 
     IEnumerator StartingCoroutine()
 	{
         yield return new WaitForSeconds(0.1f);
-
         if (this.shouldInitialize == false) // DEBUG PURPOSE ONLY : I dont like waiting
         {
             this.system_initialized = true;
@@ -40,7 +41,13 @@ public class SceneManager : MonoBehaviour {
         }
 
 		this._drones_osc_client = this._oscManager.createClient ("drones");
-		this._oscManager.sendOscMessage (this._drones_osc_client,
+        this._oscManager.sendOscMessage(this._drones_osc_client,
+            "/server/restart",
+            1);
+
+        yield return new WaitForSeconds(1);
+
+        this._oscManager.sendOscMessage (this._drones_osc_client,
 			"/client/add",
 			this._oscManager.localIP,
 			(int)(this._oscManager.localPort));

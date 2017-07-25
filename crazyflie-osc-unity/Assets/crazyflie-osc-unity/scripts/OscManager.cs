@@ -6,7 +6,7 @@ using UnityOSC;
 using System.Reflection;
 using System.Net;
 using System.Text.RegularExpressions;
-
+using System.Linq;
 
 public class OscManager : MonoBehaviour {
 	[Serializable]
@@ -69,14 +69,15 @@ public class OscManager : MonoBehaviour {
 			}
 		}
 
-		if (!handled) { // If not handled => print it
-			Debug.LogFormat ("OSC Message received on {0}", packet.Address);
-		}
+		//if (!handled) { // If not handled => print it
+			//Debug.LogFormat ("OSC Message received on {0} : {1}", packet.Address, packet.Data.Select(d => d.ToString()).Aggregate((a,b) => a + " " + b));
+		//}
 	}
 
 	void Awake() {
 		this._localServer = new OSCServer (this.localPort);
 		Debug.LogFormat ("Server Listening on {0}", this.localPort.ToString ());
+        this._localServer.SleepMilliseconds = 1; // If not set to very low value, we get a VERY HIGH input latency (May go up to 5-10 seconds)
 		this._localServer.PacketReceivedEvent += this.OnPacketReceived;
 	}
 
