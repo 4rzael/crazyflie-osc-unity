@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Maestro : MonoBehaviour {
 
+    public bool runChoregraphy = false;
+
     private bool firstTimeSinceSceneInit = true;
 
     private DronesManager _dronesManager;
@@ -22,7 +24,8 @@ public class Maestro : MonoBehaviour {
         if (firstTimeSinceSceneInit && _sceneManager.isInitialized())
         {
             firstTimeSinceSceneInit = false;
-            this.startChoregraphy();
+            if (runChoregraphy)
+                this.startChoregraphy();
         }
 	}
 
