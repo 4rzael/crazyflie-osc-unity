@@ -22,7 +22,7 @@ public class Maestro : MonoBehaviour {
         if (firstTimeSinceSceneInit && _sceneManager.isInitialized())
         {
             firstTimeSinceSceneInit = false;
-            // this.startChoregraphy();
+            this.startChoregraphy();
         }
 	}
 
@@ -54,13 +54,18 @@ public class Maestro : MonoBehaviour {
             //drone.getTrajectory().setVariable("time_multiplier", 0.5f);
             //drone.getTrajectory().startTrajectory();
 
-            drone.setTrajectory(TrajectoryManager.TrajectoryType.CIRCLE);
-            drone.getTrajectory().setVariable("center", new Vector3 (1f, 2f, 1f));
-            drone.getTrajectory().setVariable("normal_vector", new Vector3(-1f, 1f, 0f));
-            drone.getTrajectory().setVariable("radius", 1.0f);
-            drone.getTrajectory().setVariable("time", 5.0f);
-            drone.getTrajectory().setVariable<Trajectory.SpeedFunction>("speed_function", x => 3 * Mathf.Pow(x, 2));
-            drone.getTrajectory().startTrajectory();
+            //drone.setTrajectory(TrajectoryManager.TrajectoryType.CIRCLE);
+            //drone.getTrajectory().setVariable("center", new Vector3 (1f, 2f, 1f));
+            //drone.getTrajectory().setVariable("normal_vector", new Vector3(-1f, 1f, 0f));
+            //drone.getTrajectory().setVariable("radius", 1.0f);
+            //drone.getTrajectory().setVariable("time", 5.0f);
+            //drone.getTrajectory().setVariable<Trajectory.SpeedFunction>("speed_function", x => 3 * Mathf.Pow(x, 2));
+            //drone.getTrajectory().startTrajectory();
+
+            //drone.setTrajectory(TrajectoryManager.TrajectoryType.JUGGLE_HORIZONTAL);
+            //drone.getTrajectory().setVariable("hand_vector", new Vector3(1f, 5f, 10f));
+            //drone.getTrajectory().setVariable("time_multiplier", 0.5f);
+            //drone.getTrajectory().startTrajectory();
         }
     }
 }

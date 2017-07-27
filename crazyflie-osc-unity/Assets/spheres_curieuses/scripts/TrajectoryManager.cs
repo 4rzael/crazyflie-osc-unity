@@ -11,7 +11,8 @@ public class TrajectoryManager : MonoBehaviour {
         HOVER = 0,
         MULTI_LINES = 1,
         JUGGLE_3D = 2,
-        CIRCLE = 3,
+        JUGGLE_HORIZONTAL = 3,
+        CIRCLE = 4,
     }
 
     private Dictionary<TrajectoryType, Type> _possibleTrajectories = new Dictionary<TrajectoryType, Type>
@@ -19,6 +20,7 @@ public class TrajectoryManager : MonoBehaviour {
             {TrajectoryType.HOVER, typeof(TrajectoryHover)},
             {TrajectoryType.MULTI_LINES, typeof(TrajectoryMultiLines)},
             {TrajectoryType.JUGGLE_3D, typeof(TrajectoryJuggle3D)},
+            {TrajectoryType.JUGGLE_HORIZONTAL, typeof(TrajectoryJuggleHorizontal)},
             {TrajectoryType.CIRCLE, typeof(TrajectoryCircle)},
         };
 

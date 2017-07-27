@@ -203,6 +203,8 @@ public class Controller : MonoBehaviour {
         {
             int selectedIndex = pressedDroneSelectionKeys[0];
             _currentDroneIdx = (selectedIndex >= _dronesIds.Count) ? _dronesIds.Count - 1 : selectedIndex;
+
+            Debug.LogFormat("Drone selected : {0}", _dronesIds[_currentDroneIdx]);
         }
     }
 
