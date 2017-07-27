@@ -51,7 +51,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68bd31d4558bdbf469378fc956c09492, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LeftHandDroneId: -1
-  RightHandDroneId: -1
-  leftOscTopic: /left
-  rightOscTopic: /right
+  specktrOscTopic: /specktr/{channel}/{message_type}
+  _droneID: 0
