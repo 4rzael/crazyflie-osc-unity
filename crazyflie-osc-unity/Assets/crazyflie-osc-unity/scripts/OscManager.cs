@@ -69,10 +69,12 @@ public class OscManager : MonoBehaviour {
 			}
 		}
 
-		//if (!handled) { // If not handled => print it
-			//Debug.LogFormat ("OSC Message received on {0} : {1}", packet.Address, packet.Data.Select(d => d.ToString()).Aggregate((a,b) => a + " " + b));
-		//}
-	}
+        if (!handled)
+        { // If not handled => print it
+            Debug.LogFormat("OSC Message received on {0} : {1}", packet.Address, packet.Data.Select(d => d.ToString()).Aggregate((a, b) => a + " " + b));
+        }
+
+    }
 
 	void Awake() {
 		this._localServer = new OSCServer (this.localPort);
@@ -85,7 +87,7 @@ public class OscManager : MonoBehaviour {
 		Debug.LogFormat ("OSC SUBSCRIBE ON {0}", topicRegexLike);
 		topicRegexLike = "^" + topicRegexLike + "$";
 		OscSubscriber sub = new OscSubscriber ();
-		string regexified = Regex.Replace(topicRegexLike, "{(.+?)}", "(?P<$1>.+)");
+		string regexified = Regex.Replace(topicRegexLike, "{(.+?)}", "(?<$1>.+)");
 		Debug.LogFormat ("REGEXIFIED : {0}", regexified);
 		sub.topicRegex = new Regex(regexified);
 		sub.callback = callback;
