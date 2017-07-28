@@ -23,5 +23,10 @@ class DroneEditor : Editor {
 		if (GUILayout.Button ("OSC - Reset Kalman Filter")) {
 			drone.resetKalmanFilter();
 		}
-	}
+        if (GUILayout.Button("OSC - EMERGENCY"))
+        {
+            drone.EMERGENCY();
+        }
+
+    }
 }
