@@ -108,7 +108,7 @@ public class Drone : MonoBehaviour {
 
     public void EMERGENCY()
     {
-        this._oscManager.sendOscMessage(this._oscClient, "/emergency", 1);
+        this._oscManager.sendOscMessage(this._oscClient, string.Format("/crazyflie/{0}/emergency", id), 1);
     }
 
     // CALLBACKS

@@ -954,6 +954,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 114285915458164156, guid: 229a23c5307d329458057ee01f963e60,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 229a23c5307d329458057ee01f963e60, type: 2}
   m_IsPrefabParent: 0
@@ -1124,6 +1129,11 @@ Prefab:
     - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
         type: 2}
       propertyPath: dronesConfigs.Array.data[1].viz_id
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
+        type: 2}
+      propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -31,7 +31,8 @@ class SceneManagerEditor : Editor {
         if (GUI.changed)
         {
             EditorUtility.SetDirty(manager);
-            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+            if (!Application.isPlaying)
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
 	}
 }
