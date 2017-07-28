@@ -15,12 +15,12 @@ public class Controller : MonoBehaviour {
 
     private OscManager _oscManager;
     private DronesManager _dronesManager;
-    [SerializeField] private int _droneID;
+    [SerializeField] private int _controllerDroneID;
     private GameObject _drone;
 
-    private Vector3 _position = Vector3.zero;
-    private Vector3 _velocity = Vector3.zero;
-    private Vector3 _acceleration = Vector3.zero;
+    public Vector3 position = Vector3.zero;
+    public Vector3 velocity = Vector3.zero;
+    public Vector3 acceleration = Vector3.zero;
 
     private LinkedList<MathUtils.Vec3Stamped> _lastPositions = new LinkedList<MathUtils.Vec3Stamped>();
     private LinkedList<MathUtils.Vec3Stamped> _lastVelocities = new LinkedList<MathUtils.Vec3Stamped>();
@@ -30,12 +30,12 @@ public class Controller : MonoBehaviour {
         // retrieve obects from the scene
         _oscManager = GameObject.Find("OscManager").GetComponent<OscManager>();
         _dronesManager = GameObject.Find("DronesManager").GetComponent<DronesManager>();
-        _drone = _dronesManager.getDroneById(_droneID);
+        _drone = _dronesManager.getDroneById(_controllerDroneID);
 
         _dronesIds = new List<int>(_dronesManager
                            .getDrones()
                            .Select(d_go => d_go.GetComponent<Drone>().id)
-                           .Where(id => id != _droneID));
+                           .Where(id => id != _controllerDroneID));
 
         // soft "emergency" : do not need to reboot the drone
         _drone.GetComponent<Drone>().disableSendingCommands = true;
@@ -46,24 +46,24 @@ public class Controller : MonoBehaviour {
 
     private void Update()
     {
-        Debug.DrawLine(_drone.transform.position, _drone.transform.position + _velocity, Color.red);
-        Debug.DrawLine(_drone.transform.position, _drone.transform.position + _acceleration, Color.blue);
+        Debug.DrawLine(_drone.transform.position, _drone.transform.position + velocity, Color.red);
+        Debug.DrawLine(_drone.transform.position, _drone.transform.position + acceleration, Color.blue);
 
         Vector3 newPosition = _drone.GetComponent<Drone>()._realPosition;
 
         if (newPosition != Vector3.zero)
         {
             // STORE POSITION, DERIVE VELOCITY AND ACCELERATION
-            _position = newPosition;
+            position = newPosition;
 
-            _lastPositions.AddLast(_position);
+            _lastPositions.AddLast(position);
             deleteAllFromLinkedList(_lastPositions, MathUtils.Vec3Stamped.tmsIsBefore(0.5f));
 
-            _velocity = MathUtils.Vec3Stamped.average(_lastPositions);
-            _lastVelocities.AddLast(_velocity);
+            velocity = MathUtils.Vec3Stamped.average(_lastPositions);
+            _lastVelocities.AddLast(velocity);
             deleteAllFromLinkedList(_lastVelocities, MathUtils.Vec3Stamped.tmsIsBefore(0.5f));
 
-            _acceleration = MathUtils.Vec3Stamped.average(_lastVelocities);
+            acceleration = MathUtils.Vec3Stamped.average(_lastVelocities);
         }
 
         this.handleInputs();
@@ -211,8 +211,8 @@ public class Controller : MonoBehaviour {
     // controlMode selection stuff
     private Dictionary<string, Type> _controlModeInputs = new Dictionary<string, Type>
     {
-        {"thumb+2", typeof(ControlModeJuggle)},
-        {"thumb+3", null},
+        {"thumb+2", typeof(ControlModeJuggleHorizontal)},
+        {"thumb+3", typeof(ControlModeSlide)},
         {"thumb+4", null},
         {"thumb+5", null},
     };
@@ -261,6 +261,17 @@ public class Controller : MonoBehaviour {
             if (controlModeKeyReleased)
                 clearControlMode();
         }
+    }
+
+    // utils
+    public GameObject getCurrentDrone()
+    {
+        return _dronesManager.getDroneById(_dronesIds[_currentDroneIdx]);
+    }
+
+    public TrajectoryManager getCurrentDroneTrajectoryManager()
+    {
+        return getCurrentDrone().GetComponent<TrajectoryManager>();
     }
 
 }

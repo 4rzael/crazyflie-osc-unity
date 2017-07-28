@@ -46,13 +46,12 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1773237670909270}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0d632e3a6b1793a49ad0a6aac73c03d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lpsNodePrefab: {fileID: 1696206719808976, guid: 044528ac2b450b84db3c40b4a8a31994,
-    type: 2}
+  lpsNodePrefab: {fileID: 0}
   lpsNodesPositions:
   - {x: 0, y: 0, z: 0}
   - {x: 2.85, y: 0, z: 0}

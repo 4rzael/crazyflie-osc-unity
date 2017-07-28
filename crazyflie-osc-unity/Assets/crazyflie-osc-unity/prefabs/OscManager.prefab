@@ -51,9 +51,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41536eaca2fdc2c40a7dc0727d9b8e3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localIP: 127.0.0.1
+  localIP: 10.204.4.62
   localPort: 6006
   servers:
   - name: drones
-    ip: 127.0.0.1
-    port: 5000
+    ip: 10.204.4.149
+    port: 5005

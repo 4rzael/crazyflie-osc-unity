@@ -86,7 +86,7 @@ public class Trajectory : MonoBehaviour {
     /*
      * Speed distribution over time.
      * Must be a function that integrates to 1 in the [0;1] space
-     * TODO : computationaly approximate the integral in order to remove this limitation
+     * TODO : computationaly approximate the integral in order to remove this limitation ?
      */
     private SpeedFunction _speedFunction = x => 1.0f;
 
@@ -98,17 +98,19 @@ public class Trajectory : MonoBehaviour {
 
     protected float getSpeedAtTime(float t)
     {
-        return this._speedFunction(t);
+        float speed = this._speedFunction(t);
+        return speed;
     }
 
     // Use this for initialization
     protected virtual void Awake () {
         this.addSetter<SpeedFunction>("speed_function", this.setSpeedFunction);
 	}
-	
-	// Update is called once per frame
-	void Update () {		
-	}
+
+    private void OnDestroy()
+    {
+        stopTrajectory();
+    }
 
     private void OnApplicationQuit()
     {

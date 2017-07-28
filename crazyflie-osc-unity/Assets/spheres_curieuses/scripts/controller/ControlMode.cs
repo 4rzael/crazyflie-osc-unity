@@ -2,7 +2,7 @@
 
 public abstract class ControlMode {
 
-    Controller _controller;
+    protected Controller _controller;
     bool _ended = false;
 
     public ControlMode(Controller controller)

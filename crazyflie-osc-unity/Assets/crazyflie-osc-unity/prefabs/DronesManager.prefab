@@ -46,7 +46,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1703137360678010}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 107dc9b53b8cae24c853f791d9d084f6, type: 3}
   m_Name: 
@@ -54,4 +54,19 @@ MonoBehaviour:
   dronePrefab: {fileID: 1896065288343814, guid: 91518061a9734be4b93e8756ff03c1cf,
     type: 2}
   droneOscTopic: /crazyflie
-  dronesConfigs: []
+  dronesConfigs:
+  - radio_uri: radio://0/80/2M/E7E7E7E701
+    color: {r: 0, g: 0.71799934, b: 0.29711857, a: 1}
+    viz_id: 0
+  - radio_uri: radio://0/80/2M/E7E7E7E702
+    color: {r: 0.64900446, g: 0, b: 0.7249813, a: 1}
+    viz_id: 1
+  - radio_uri: radio://0/80/2M/E7E7E7E703
+    color: {r: 0.3194303, g: 0.59132016, b: 0, a: 1}
+    viz_id: 2
+  - radio_uri: radio://0/80/2M/E7E7E7E704
+    color: {r: 0.4765591, g: 0.6066512, b: 0, a: 1}
+    viz_id: 3
+  - radio_uri: radio://0/80/2M/E7E7E7E705
+    color: {r: 0, g: 0.8378918, b: 0.50113845, a: 1}
+    viz_id: 4

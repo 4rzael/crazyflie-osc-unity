@@ -68,7 +68,6 @@ public class TrajectoryJuggle3D : Trajectory {
         var currentHeight = -MathUtils.UnityVectorsToMathNet(transform.position).DotProduct(MathUtils.UnityVectorsToMathNet(gravityVector));
         var initialHeight = -MathUtils.UnityVectorsToMathNet(initialPosition).DotProduct(MathUtils.UnityVectorsToMathNet(gravityVector));
 
-        Debug.LogFormat("HEIGHTS : {0}\t{1}", currentHeight, initialHeight);
         return currentHeight < initialHeight;
     }
 
