@@ -46,7 +46,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1773237670909270}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0d632e3a6b1793a49ad0a6aac73c03d5, type: 3}
   m_Name: 
@@ -55,11 +55,11 @@ MonoBehaviour:
     type: 2}
   lpsNodesPositions:
   - {x: 0, y: 0, z: 0}
-  - {x: 8, y: 0, z: 4.1}
-  - {x: 8, y: 5, z: 0}
-  - {x: 8, y: 5, z: 4.1}
+  - {x: 7.4, y: 0, z: 0}
+  - {x: 7.4, y: 4.2, z: 0}
+  - {x: 7.4, y: 4.2, z: 4.1}
   - {x: 0, y: 0, z: 4.1}
-  - {x: 0, y: 5, z: 4.1}
-  - {x: 0, y: 5, z: 0}
-  - {x: 8, y: 0, z: 0}
+  - {x: 0, y: 4.2, z: 4.1}
+  - {x: 0, y: 4.2, z: 0}
+  - {x: 7.4, y: 0, z: 4.1}
   lpsOscTopic: /lps

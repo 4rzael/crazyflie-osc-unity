@@ -95,7 +95,7 @@ public class Drone : MonoBehaviour {
                 }
             });
 
-		this._oscManager.OscSubscribe (string.Format ("/log/{0}/battery", this.id),
+        this._oscManager.OscSubscribe (string.Format ("/log/{0}/battery", this.id),
 			delegate(string topic, OSCPacket packet, System.Text.RegularExpressions.GroupCollection path_args) {
 				float battery = (float)packet.Data [0];
 				this._battery = ((battery - 3.0f) / 1.1f) * 100.0f;
@@ -104,7 +104,7 @@ public class Drone : MonoBehaviour {
                     cb(this._battery);
                 }
             });
-	}
+    }
 
     public void EMERGENCY()
     {

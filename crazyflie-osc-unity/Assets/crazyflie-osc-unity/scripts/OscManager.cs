@@ -85,10 +85,14 @@ public class OscManager : MonoBehaviour {
 
 	public void OscSubscribe(string topicRegexLike, OscSubscribeCallback callback) {
 		Debug.LogFormat ("OSC SUBSCRIBE ON {0}", topicRegexLike);
+        topicRegexLike = Regex.Escape(topicRegexLike);
 		topicRegexLike = "^" + topicRegexLike + "$";
 		OscSubscriber sub = new OscSubscriber ();
-		string regexified = Regex.Replace(topicRegexLike, "{(.+?)}", "(?<$1>.+)");
-		Debug.LogFormat ("REGEXIFIED : {0}", regexified);
+        Debug.LogFormat("Regexified0 : {0}", topicRegexLike);
+        string regexified = Regex.Replace(topicRegexLike, Regex.Escape(Regex.Escape("*")), ".*");
+        Debug.LogFormat("Regexified1 : {0}", regexified);
+        regexified = Regex.Replace(regexified, "\\\\{(.+?)}", "(?<$1>.+)");
+        Debug.LogFormat("Regexified2 : {0}", regexified);
 		sub.topicRegex = new Regex(regexified);
 		sub.callback = callback;
 		this._serverSubscriber.Add (sub);

@@ -14,6 +14,7 @@ public class SceneManager : MonoBehaviour {
 	private bool system_initialized;
 
     public bool shouldInitialize = true;
+    public bool shouldHidePositionAndBatteryLogs = true; // they can be pretty annoying
 
 	public bool isInitialized() {
 		return this.system_initialized;
@@ -26,9 +27,20 @@ public class SceneManager : MonoBehaviour {
 		this._lpsManager = GameObject.Find ("LpsManager").GetComponent<LpsManager> ();
 		this._dronesManager = GameObject.Find ("DronesManager").GetComponent<DronesManager> ();
 
-        // this._oscManager.OscSubscribe("/test/tick", (address, packet, path_args) => { print(packet.Data[0].ToString()); });
+        if (shouldHidePositionAndBatteryLogs)
+        {
+            this._oscManager.OscSubscribe("/log/*/position/*",
+                delegate (string topic, OSCPacket packet, System.Text.RegularExpressions.GroupCollection path_args)
+                {
+                });
+            this._oscManager.OscSubscribe("/log/*/battery/*",
+                delegate (string topic, OSCPacket packet, System.Text.RegularExpressions.GroupCollection path_args)
+                {
+                });
 
-		StartCoroutine (StartingCoroutine ());
+        }
+
+        StartCoroutine(StartingCoroutine ());
 	}
 
     IEnumerator StartingCoroutine()
