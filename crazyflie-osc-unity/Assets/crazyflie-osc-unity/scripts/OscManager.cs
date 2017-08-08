@@ -13,7 +13,7 @@ public class OscManager : MonoBehaviour {
 	public struct DistantOsc {
 		public string name;
 		public string ip;
-		public short port;
+		public ushort port;
 	}
 
 	public delegate void OscSubscribeCallback(string topic, OSCPacket packet, GroupCollection path_args);
@@ -26,6 +26,8 @@ public class OscManager : MonoBehaviour {
 	public short localPort = 6006;
 	public DistantOsc[] servers;
 
+    public bool shouldPrintDebugMessages = true;
+
 	private OSCServer _localServer;
 	private List<OscSubscriber> _serverSubscriber = new List<OscSubscriber>();
 	private List<OSCClient> _localClients = new List<OSCClient>();
@@ -35,7 +37,8 @@ public class OscManager : MonoBehaviour {
 	}
 
 	public void sendOscMessage(OSCClient client, string topic, params object[] values) {
-		Debug.LogFormat ("sending message on {0}", topic);
+        if (shouldPrintDebugMessages)
+    		Debug.LogFormat ("sending message on {0}", topic);
 		OSCMessage msg = new OSCMessage (topic);
 		foreach (object val in values) {
 			Type val_type = val.GetType ();
@@ -78,21 +81,20 @@ public class OscManager : MonoBehaviour {
 
 	void Awake() {
 		this._localServer = new OSCServer (this.localPort);
-		Debug.LogFormat ("Server Listening on {0}", this.localPort.ToString ());
-        this._localServer.SleepMilliseconds = 1; // If not set to very low value, we get a VERY HIGH input latency (May go up to 5-10 seconds)
+        if (shouldPrintDebugMessages)
+    		Debug.LogFormat ("Server Listening on {0}", this.localPort.ToString ());
+        this._localServer.SleepMilliseconds = 0; // If not set to very low value, we get a VERY HIGH input latency (May go up to 5-10 seconds)
 		this._localServer.PacketReceivedEvent += this.OnPacketReceived;
 	}
 
 	public void OscSubscribe(string topicRegexLike, OscSubscribeCallback callback) {
-		Debug.LogFormat ("OSC SUBSCRIBE ON {0}", topicRegexLike);
+        if (shouldPrintDebugMessages)
+    		Debug.LogFormat ("OSC SUBSCRIBE ON {0}", topicRegexLike);
         topicRegexLike = Regex.Escape(topicRegexLike);
 		topicRegexLike = "^" + topicRegexLike + "$";
 		OscSubscriber sub = new OscSubscriber ();
-        Debug.LogFormat("Regexified0 : {0}", topicRegexLike);
         string regexified = Regex.Replace(topicRegexLike, Regex.Escape(Regex.Escape("*")), ".*");
-        Debug.LogFormat("Regexified1 : {0}", regexified);
         regexified = Regex.Replace(regexified, "\\\\{(.+?)}", "(?<$1>.+)");
-        Debug.LogFormat("Regexified2 : {0}", regexified);
 		sub.topicRegex = new Regex(regexified);
 		sub.callback = callback;
 		this._serverSubscriber.Add (sub);

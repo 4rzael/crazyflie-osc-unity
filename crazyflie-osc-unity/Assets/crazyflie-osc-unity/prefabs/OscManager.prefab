@@ -55,5 +55,9 @@ MonoBehaviour:
   localPort: 6006
   servers:
   - name: drones
-    ip: 10.204.4.149
+    ip: 10.204.4.197
     port: 5005
+  - name: drones_meta
+    ip: 10.204.4.197
+    port: 5006
+  shouldPrintDebugMessages: 1
