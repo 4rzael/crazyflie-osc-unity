@@ -55,8 +55,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4758779578955512}
-  - component: {fileID: 114509395294254926}
   - component: {fileID: 114659076979189222}
+  - component: {fileID: 114307081339479792}
   m_Layer: 0
   m_Name: crazyflie
   m_TagString: Drone
@@ -212,6 +212,23 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &114307081339479792
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1417553724295450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad5ccb0c563353c43a4b2042e91edd77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  realPositionMarkerPrefab: {fileID: 1629452118077940, guid: 18063050497e0bb43828feba7a7c5f58,
+    type: 2}
+  baseTopic: /crazyflie
+  id: -1
+  radioUri: 
+  disableSendingCommands: 0
 --- !u!114 &114485813539855886
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -287,22 +304,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114509395294254926
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1417553724295450}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2e51de64edc729418b17a0bc96f75dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: 0
-  realPositionMarkerPrefab: {fileID: 1629452118077940, guid: 18063050497e0bb43828feba7a7c5f58,
-    type: 2}
-  _realPosition: {x: 0, y: 0, z: 0}
-  disableSendingCommands: 0
 --- !u!114 &114659076979189222
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -314,7 +315,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf0eb1bff605de34498da1c8f730a6e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  oscManager: {fileID: 0}
 --- !u!114 &114718326942636516
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -32,11 +32,17 @@ public class OscManager : MonoBehaviour {
 	private List<OscSubscriber> _serverSubscriber = new List<OscSubscriber>();
 	private List<OSCClient> _localClients = new List<OSCClient>();
 
-	public DistantOsc getOscDistantServer(string name) {
+	private DistantOsc GetOscDistantServer(string name) {
 		return Array.Find<DistantOsc> (this.servers, s => s.name == name);
 	}
 
-	public void sendOscMessage(OSCClient client, string topic, params object[] values) {
+    /// <summary>
+    /// Sends an OSC message.
+    /// </summary>
+    /// <param name="client">The OSC client to send from.</param>
+    /// <param name="topic">The OSC topic.</param>
+    /// <param name="values">The values to send.</param>
+    public void SendOscMessage(OSCClient client, string topic, params object[] values) {
         if (shouldPrintDebugMessages)
     		Debug.LogFormat ("sending message on {0}", topic);
 		OSCMessage msg = new OSCMessage (topic);
@@ -52,8 +58,13 @@ public class OscManager : MonoBehaviour {
 		client.Send (msg);
 	}
 
-	public OSCClient createClient(string server) {
-		OscManager.DistantOsc oscDestination = this.getOscDistantServer (server);
+    /// <summary>
+    /// Creates an OSC client.
+    /// </summary>
+    /// <param name="server">The server to connect the client to.</param>
+    /// <returns></returns>
+    public OSCClient createClient(string server) {
+		OscManager.DistantOsc oscDestination = this.GetOscDistantServer (server);
 
 		IPAddress ip = IPAddress.Parse(oscDestination.ip);
 		OSCClient c = new UnityOSC.OSCClient (ip, (int)(oscDestination.port));
@@ -61,7 +72,12 @@ public class OscManager : MonoBehaviour {
 		return c;
 	}
 
-	private void OnPacketReceived(OSCServer server, OSCPacket packet) {
+    /// <summary>
+    /// Called when [packet received].
+    /// </summary>
+    /// <param name="server">The distant server that sent the packet.</param>
+    /// <param name="packet">The packet received.</param>
+    private void OnPacketReceived(OSCServer server, OSCPacket packet) {
 		bool handled = false;
 
 		foreach (OscSubscriber sub in this._serverSubscriber) {
@@ -87,7 +103,15 @@ public class OscManager : MonoBehaviour {
 		this._localServer.PacketReceivedEvent += this.OnPacketReceived;
 	}
 
-	public void OscSubscribe(string topicRegexLike, OscSubscribeCallback callback) {
+    /// <summary>
+    /// Subscribes to an OSC topic.
+    /// Regex notation means :
+    /// `{variable_name}` to accept anything and store it as `variable_name`
+    /// `*` to accept anything
+    /// </summary>
+    /// <param name="topicRegexLike">The topic ("regex"-like notation).</param>
+    /// <param name="callback">The callback to call on packet reception.</param>
+    public void OscSubscribe(string topicRegexLike, OscSubscribeCallback callback) {
         if (shouldPrintDebugMessages)
     		Debug.LogFormat ("OSC SUBSCRIBE ON {0}", topicRegexLike);
         topicRegexLike = Regex.Escape(topicRegexLike);
@@ -100,14 +124,27 @@ public class OscManager : MonoBehaviour {
 		this._serverSubscriber.Add (sub);
 	}
 
-	public void Stop() 
+    /// <summary>
+    /// Stops this instance.
+    /// </summary>
+    public void Stop() 
 	{
-		this._localServer.Close ();
+        if (this._localServer != null)
+        {
+            this._localServer.Close();
+            this._localServer = null;
+        }
 
 		foreach(OSCClient c in this._localClients)
 		{
 			c.Close ();
 		}
+        this._localClients.Clear();
 	}
+
+    private void OnDestroy()
+    {
+        Stop();
+    }
 
 }
