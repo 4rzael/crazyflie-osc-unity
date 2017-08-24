@@ -29,7 +29,10 @@ class DroneEditor : Editor {
 
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider); // Separator
         EditorGUILayout.LabelField("DEBUG ONLY");
-        // Nothing :D
+        if (GUILayout.Button("UPDATE LOWPASS FILTER"))
+        {
+            drone.UpdateLowPassFilterWindowSize(drone.PositionEstimationLowPassFilterWindowSize);
+        }
 
     }
 }

@@ -31,7 +31,7 @@ class PidPositionControllerEditor : Editor
         {
             if (variables[key] != positionController.variables[key])
             {
-                positionController.setVariable(key, variables[key]);
+                positionController.SetVariable(key, variables[key]);
             }
         }
     }

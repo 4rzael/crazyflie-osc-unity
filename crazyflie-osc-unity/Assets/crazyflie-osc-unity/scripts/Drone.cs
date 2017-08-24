@@ -4,6 +4,12 @@ using UnityEngine;
 using UnityOSC;
 using UnityEngine.UI;
 
+/// <summary>
+/// Represents a drone.
+/// Moving a GameObject containing this script will allow to control the position of the drone in real life.
+/// Also adds some visualisation tools : A marker to see the position/rotation of the real drone linked to this script, and a battery life bar.
+/// For advanced users, it also allows to access logging and parameters systems of the crazyflie.
+/// </summary>
 public class Drone : MonoBehaviour
 {
     #region Event handlers
@@ -37,7 +43,8 @@ public class Drone : MonoBehaviour
     [SerializeField] private string radioUri = null;
     public string RadioUri { get { return radioUri; } }
 
-    public bool disableSendingCommands = false;
+    public bool UseAsInput = false;
+    public uint PositionEstimationLowPassFilterWindowSize = 10;
     #endregion
 
 
@@ -60,6 +67,9 @@ public class Drone : MonoBehaviour
     // Battery GUI
     private float _battery = 0.0f;
     private Slider _batterySlider;
+
+    // If used as input
+    private LowPassFilter _positionEstimationLowPassFilter;
     #endregion
 
 
@@ -140,6 +150,8 @@ public class Drone : MonoBehaviour
                 OnBattery(voltage);
             });
             #endregion
+
+            _positionEstimationLowPassFilter = new LowPassFilter(PositionEstimationLowPassFilterWindowSize);
 
             _initialized = true;
         }
@@ -244,9 +256,23 @@ public class Drone : MonoBehaviour
         return _realPositionMarker;
     }
 
+    /// <summary>
+    /// Gets the real position.
+    /// </summary>
+    /// <returns></returns>
     public Vector3 GetRealPosition()
     {
         return _realPositionMarker.transform.position;
+    }
+
+    /// <summary>
+    /// Updates the size of the low pass filter window.
+    /// </summary>
+    /// <param name="windowSize">Size of the window.</param>
+    public void UpdateLowPassFilterWindowSize(uint windowSize)
+    {
+        PositionEstimationLowPassFilterWindowSize = windowSize;
+        _positionEstimationLowPassFilter.SetWindowSize(windowSize);
     }
     #endregion
 
@@ -287,6 +313,17 @@ public class Drone : MonoBehaviour
     }
 
     /// <summary>
+    /// Asks for log toc.
+    /// </summary>
+    public void AskForLogToc()
+    {
+        if (_initialized)
+        {
+            _oscManager.SendOscMessage(_oscClient, string.Format("/log/{0}/send_toc", this.id));
+        }
+    }
+
+    /// <summary>
     /// Sets the parameter {paramGroup}.{paramName} to the value {value}
     /// (See more informations on logging here : https://wiki.bitcraze.io/doc:crazyflie:api:python:index)
     /// </summary>
@@ -300,6 +337,17 @@ public class Drone : MonoBehaviour
         if (_initialized)
         {
             this._oscManager.SendOscMessage(this._oscClient, string.Format("/param/{0}/{1}/{2}/set", this.id, paramGroup, paramName), value);
+        }
+    }
+
+    /// <summary>
+    /// Asks for parameter toc.
+    /// </summary>
+    public void AskForParamToc()
+    {
+        if (_initialized)
+        {
+            _oscManager.SendOscMessage(_oscClient, string.Format("/param/{0}/send_toc", this.id));
         }
     }
     #endregion
@@ -355,7 +403,12 @@ public class Drone : MonoBehaviour
     /// <param name="position">The position given by the Kalman Filter (In the Unity3d base).</param>
     protected void OnPosition(Vector3 position)
     {
-        _realPosition = position;
+        if (UseAsInput) // If used as input, apply a low pass filter to improve position accuracy, as delay is not as important
+        {
+            _realPosition = _positionEstimationLowPassFilter.AddValue(position);
+        }
+        else
+            _realPosition = position;
         if (PositionEvent != null) PositionEvent(this, position);
     }
 
@@ -442,7 +495,7 @@ public class Drone : MonoBehaviour
         // update goal
         if (this._oscManager != null)
         {
-            if (this.disableSendingCommands == false && this._syncPosition)
+            if (this.UseAsInput == false && this._syncPosition)
             {
                 SendGoal(transform.position);
             }

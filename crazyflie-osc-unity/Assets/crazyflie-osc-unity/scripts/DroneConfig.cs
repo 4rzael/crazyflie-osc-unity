@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+/// <summary>
+/// Represent the configuration of a drone, in order for the DronesManager to create them at game startup.
+/// </summary>
 [Serializable]
 public class DroneConfig
 {
@@ -12,6 +15,10 @@ public class DroneConfig
 
     public int viz_id; // ONLY USED BY EDITOR
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DroneConfig"/> class.
+    /// </summary>
+    /// <param name="_viz_id">The viz identifier.</param>
     public DroneConfig(int _viz_id=0)
 	{
         viz_id = _viz_id;

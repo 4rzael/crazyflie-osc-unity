@@ -2,6 +2,10 @@
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Manage <see cref="Drone"/> instances, by creating/deleting them.
+/// Also provides functions to find Drones, and to broadcast functions to them.
+/// </summary>
 [ExecuteInEditMode]
 public class DronesManager : MonoBehaviour {
     #region Public properties

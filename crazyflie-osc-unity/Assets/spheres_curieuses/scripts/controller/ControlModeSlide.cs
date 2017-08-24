@@ -5,8 +5,6 @@ using UnityEngine;
 public class ControlModeSlide : ControlMode
 {
 
-    private TrajectoryManager trajectoryManager;
-
     public ControlModeSlide(Controller c) : base(c) { }
 
     private float speedFunction(float t)
@@ -20,7 +18,6 @@ public class ControlModeSlide : ControlMode
         base.start();
         Debug.Log("Slide start");
 
-        trajectoryManager = _controller.getCurrentDroneTrajectoryManager();
         trajectoryManager.setTrajectory(TrajectoryManager.TrajectoryType.MULTI_LINES);
         trajectoryManager.getTrajectory().setVariable("loop", false);
         trajectoryManager.getTrajectory().setVariable<Trajectory.SpeedFunction>("speed_function", speedFunction); // slow down trajectory

@@ -30,15 +30,15 @@ public class Controller : MonoBehaviour {
         // retrieve obects from the scene
         _oscManager = GameObject.Find("OscManager").GetComponent<OscManager>();
         _dronesManager = GameObject.Find("DronesManager").GetComponent<DronesManager>();
-        _drone = _dronesManager.getDroneById(_controllerDroneID);
+        _drone = _dronesManager.GetDroneGameObjectById(_controllerDroneID);
 
         _dronesIds = new List<int>(_dronesManager
-                           .getDrones()
-                           .Select(d_go => d_go.GetComponent<Drone>().id)
+                           .GetDrones()
+                           .Select(d_go => d_go.Id)
                            .Where(id => id != _controllerDroneID));
 
         // soft "emergency" : do not need to reboot the drone
-        _drone.GetComponent<Drone>().disableSendingCommands = true;
+        _drone.GetComponent<Drone>().UseAsInput = true;
 
         // Subscribe to the specktr OSC topic
         _oscManager.OscSubscribe(specktrOscTopic, this.onButtons);
@@ -47,9 +47,9 @@ public class Controller : MonoBehaviour {
     private void Update()
     {
         Debug.DrawLine(_drone.transform.position, _drone.transform.position + velocity, Color.red);
-        Debug.DrawLine(_drone.transform.position, _drone.transform.position + acceleration, Color.blue);
+        //Debug.DrawLine(_drone.transform.position, _drone.transform.position + acceleration, Color.blue);
 
-        Vector3 newPosition = _drone.GetComponent<Drone>()._realPosition;
+        Vector3 newPosition = _drone.GetComponent<Drone>().GetRealPosition();
 
         if (newPosition != Vector3.zero)
         {
@@ -62,6 +62,8 @@ public class Controller : MonoBehaviour {
             velocity = MathUtils.Vec3Stamped.average(_lastPositions);
             _lastVelocities.AddLast(velocity);
             deleteAllFromLinkedList(_lastVelocities, MathUtils.Vec3Stamped.tmsIsBefore(0.5f));
+            if (velocity.magnitude < 1)
+                velocity = Vector3.zero;
 
             acceleration = MathUtils.Vec3Stamped.average(_lastVelocities);
         }
@@ -88,15 +90,15 @@ public class Controller : MonoBehaviour {
 
     private Dictionary<int, string> _buttons_osc_map = new Dictionary<int, string>
     {
-        {67, "thumb+5"},
-        {65, "thumb+4"},
-        {64, "thumb+3"},
-        {62, "thumb+2"},
-        {55, "palm+5"},
-        {53, "palm+4"},
-        {52, "palm+3"},
-        {50, "palm+2"},
-        {48, "palm+1"},
+        {1, "thumb+5"}, // with keyboard controller : 67
+        {2, "thumb+4"}, // with keyboard controller : 65
+        {3, "thumb+3"}, // with keyboard controller : 64
+        {4, "thumb+2"}, // with keyboard controller : 62
+        {5, "palm+5"},  // with keyboard controller : 55
+        {6, "palm+4"},  // with keyboard controller : 53
+        {7, "palm+3"},  // with keyboard controller : 52
+        {8, "palm+2"},  // with keyboard controller : 50
+        {9, "palm+1"},  // with keyboard controller : 48
     };
 
     private Dictionary<string, GloveInput> _buttons = new Dictionary<string, GloveInput>
@@ -139,13 +141,14 @@ public class Controller : MonoBehaviour {
     void onButtons(string topic, OSCPacket packet, GroupCollection path_args)
     {
         string messageType = path_args["message_type"].Value;
-        Debug.LogFormat("spectkr command of type {0} received : '{1}'",
-            messageType,
-            packet.Data.Select(b => b.ToString()).Aggregate((a, b) => a + ", " + b));
+        //Debug.LogFormat("spectkr command of type {0} received : '{1}'",
+        //    messageType,
+        //    packet.Data.Select(b => b.ToString()).Aggregate((a, b) => a + ", " + b));
 
         switch (messageType)
         {
             case "note_on": this.onNoteOn((int)packet.Data[0], (int)packet.Data[1]);
+                Debug.LogFormat("NOTE ON", (int)packet.Data[0]);
                 break;
             case "note_off": this.onNoteOff((int)packet.Data[0], (int)packet.Data[1]);
                 break;
@@ -188,23 +191,47 @@ public class Controller : MonoBehaviour {
     // drone selection stuff
     private List<int> _dronesIds;
     private int _currentDroneIdx = 0;
-    private string[] _droneSelectionInputs = new string[] { "palm+1", "palm+2", "palm+3", "palm+4", "palm+5" };
+    private string[] _droneSelectionInputs = new string[] {"palm+2", "palm+3", "palm+4", "palm+5" };
 
     void handleDroneSelection()
     {
-        List<int> pressedDroneSelectionKeys = new List<int>(
-            _droneSelectionInputs
-            .Select(key => new KeyValuePair<int, GloveInput>(Array.IndexOf(_droneSelectionInputs, key), _buttons[key])) // get buttons values
-            .Where(pair => pair.Key >= 0)
-            .Where(pair => pair.Value.edgeValue == 1) // take those with a rising edge signal
-            .Select(pair => pair.Key)); // only get their position in the drone id array
+        string pressedDroneSelectionKey = _droneSelectionInputs
+            .Select(key => new KeyValuePair<string, GloveInput>(key, _buttons[key]))
+            .Where(pair => pair.Value.edgeValue == 1)
+            .Select(pair => pair.Key)
+            .FirstOrDefault();
 
-        if (pressedDroneSelectionKeys.Count > 0) // drone selected
+        if (pressedDroneSelectionKey != null)
         {
-            int selectedIndex = pressedDroneSelectionKeys[0];
-            _currentDroneIdx = (selectedIndex >= _dronesIds.Count) ? _dronesIds.Count - 1 : selectedIndex;
+            selectDroneByInput(pressedDroneSelectionKey);
+        }
 
-            Debug.LogFormat("Drone selected : {0}", _dronesIds[_currentDroneIdx]);
+        //List<int> pressedDroneSelectionKeys = new List<int>(
+        //    _droneSelectionInputs
+        //    .Select(key => new KeyValuePair<int, GloveInput>(Array.IndexOf(_droneSelectionInputs, key), _buttons[key])) // get buttons values
+        //    .Where(pair => pair.Key >= 0)
+        //    .Where(pair => pair.Value.edgeValue == 1) // take those with a rising edge signal
+        //    .Select(pair => pair.Key)); // only get their position in the drone id array
+
+        //if (pressedDroneSelectionKeys.Count > 0) // drone selected
+        //{
+        //    int selectedIndex = pressedDroneSelectionKeys[0];
+        //    _currentDroneIdx = (selectedIndex >= _dronesIds.Count) ? _dronesIds.Count - 1 : selectedIndex;
+
+        //    Debug.LogFormat("Drone selected : {0}", _dronesIds[_currentDroneIdx]);
+        //}
+    }
+
+    public void selectDroneByInput(string input)
+    {
+        if (_droneSelectionInputs.Contains(input))
+        {
+            int selectedIndex = Array.IndexOf(_droneSelectionInputs, input);
+            if (selectedIndex >= 0)
+            {
+                _currentDroneIdx = (selectedIndex >= _dronesIds.Count) ? _dronesIds.Count - 1 : selectedIndex;
+                Debug.LogFormat("Drone selected : {0}", _dronesIds[_currentDroneIdx]);
+            }
         }
     }
 
@@ -213,7 +240,7 @@ public class Controller : MonoBehaviour {
     {
         {"thumb+2", typeof(ControlModeJuggleHorizontal)},
         {"thumb+3", typeof(ControlModeSlide)},
-        {"thumb+4", null},
+        {"thumb+4", typeof(ControlModeTakeoff)},
         {"thumb+5", null},
     };
 
@@ -226,12 +253,13 @@ public class Controller : MonoBehaviour {
         _currentControlMode = null;
     }
 
-    private void setControlMode(string s)
+    public void setControlMode(string s)
     {
         if (_controlModeInputs.ContainsKey(s) && _controlModeInputs[s] != null)
         {
             clearControlMode();
             _currentControlMode = (ControlMode)Activator.CreateInstance(_controlModeInputs[s], new object[] { this });
+            _currentControlMode.start();
         }
     }
 
@@ -246,7 +274,6 @@ public class Controller : MonoBehaviour {
         if (pressedControlModeSelectionKeys.Count > 0)
         {
             setControlMode(pressedControlModeSelectionKeys[0]);
-            _currentControlMode.start();
         }
 
         if (_currentControlMode != null) {
@@ -266,7 +293,7 @@ public class Controller : MonoBehaviour {
     // utils
     public GameObject getCurrentDrone()
     {
-        return _dronesManager.getDroneById(_dronesIds[_currentDroneIdx]);
+        return _dronesManager.GetDroneGameObjectById(_dronesIds[_currentDroneIdx]);
     }
 
     public TrajectoryManager getCurrentDroneTrajectoryManager()

@@ -8,6 +8,11 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Linq;
 
+/// <summary>
+/// Wrapper around the UnityOSC library.
+/// Handles everything OSC-related.
+/// Allows to send OSC messages and to subscribe to OSC topics.
+/// </summary>
 public class OscManager : MonoBehaviour {
 	[Serializable]
 	public struct DistantOsc {
@@ -105,7 +110,7 @@ public class OscManager : MonoBehaviour {
 
     /// <summary>
     /// Subscribes to an OSC topic.
-    /// Regex notation means :
+    /// "regex"-like notation means :
     /// `{variable_name}` to accept anything and store it as `variable_name`
     /// `*` to accept anything
     /// </summary>

@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class TrajectoryHover : Trajectory {
 
-	// Update is called once per frame
+    private bool firstTimeCall = true;
+
 	void Update () {
-        if (this.started && this.hasVariables("position"))
+        if (this.started && this.hasVariables("position") && firstTimeCall)
         {
+            firstTimeCall = false;
             transform.position = (Vector3)(_variables["position"]);
         }
 	}

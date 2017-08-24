@@ -4,6 +4,10 @@ using System.Linq;
 using UnityEngine;
 using UnityOSC;
 
+/// <summary>
+/// Manages the LPS system.
+/// Creates GameObjects to represent anchors in Unity, and sends their position to the OSC server.
+/// </summary>
 [ExecuteInEditMode]
 public class LpsManager : MonoBehaviour {
 
