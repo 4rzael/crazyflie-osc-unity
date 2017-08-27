@@ -247,6 +247,11 @@ Prefab:
       propertyPath: runChoregraphy
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114174052984880396, guid: 00c144073fb47ee4e89aa6c296b3c7d6,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 00c144073fb47ee4e89aa6c296b3c7d6, type: 2}
   m_IsPrefabParent: 0
@@ -1472,21 +1477,6 @@ GameObject:
   m_PrefabParentObject: {fileID: 1974183738211020, guid: 00c144073fb47ee4e89aa6c296b3c7d6,
     type: 2}
   m_PrefabInternal: {fileID: 408074839}
---- !u!114 &1945266762
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1945266759}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87a6d595690d97747a8b2b2a32b04d04, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  torsoId: 1
-  handId: 3
-  droneId: 0
-  difference: 1.5
 --- !u!114 &1945266763
 MonoBehaviour:
   m_ObjectHideFlags: 0
