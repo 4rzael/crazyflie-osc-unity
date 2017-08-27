@@ -18,9 +18,9 @@ public class ControlModeSlide : ControlMode
         base.start();
         Debug.Log("Slide start");
 
-        trajectoryManager.setTrajectory(TrajectoryManager.TrajectoryType.MULTI_LINES);
-        trajectoryManager.getTrajectory().setVariable("loop", false);
-        trajectoryManager.getTrajectory().setVariable<Trajectory.SpeedFunction>("speed_function", speedFunction); // slow down trajectory
+        Trajectory t = trajectoryManager.setTrajectory(TrajectoryManager.TrajectoryType.MULTI_LINES);
+        t.setVariable("loop", false);
+        t.setVariable<Trajectory.SpeedFunction>("speed_function", speedFunction); // slow down trajectory
     }
 
 

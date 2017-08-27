@@ -78,7 +78,7 @@ public class Controller : MonoBehaviour {
     #region control mode selection attributes
     private Dictionary<string, Type> _controlModeInputs = new Dictionary<string, Type>
     {
-        {"thumb+2", typeof(ControlModeFollowHand)},
+        {"thumb+2", typeof(ControlModeSampler)},
         {"thumb+3", typeof(ControlModeSlide)},
         {"thumb+4", typeof(ControlModeTakeoff)},
         {"thumb+5", typeof(ControlModeLand)},

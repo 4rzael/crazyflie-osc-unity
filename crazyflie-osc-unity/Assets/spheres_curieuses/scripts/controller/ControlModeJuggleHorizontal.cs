@@ -8,7 +8,6 @@ public class ControlModeJuggleHorizontal : ControlMode {
 
     public override void start()
     {
-        Debug.Log("Juggle 3D start");
         base.start();
 
         trajectoryManager.setTrajectory(TrajectoryManager.TrajectoryType.JUGGLE_HORIZONTAL);
@@ -22,8 +21,6 @@ public class ControlModeJuggleHorizontal : ControlMode {
         Vector3 velocity = _controller.velocity;
         trajectoryManager.getTrajectory().setVariable("hand_vector", velocity);
         trajectoryManager.getTrajectory().startTrajectory();
-
-        Debug.Log("Juggle 3D end");
     }
 
     override public void update(Dictionary<string, GloveInput> gloveInputs)
