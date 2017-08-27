@@ -10,7 +10,7 @@ public class TrajectoryHover : Trajectory {
         if (this.started && this.hasVariables("position") && firstTimeCall)
         {
             firstTimeCall = false;
-            transform.position = (Vector3)(_variables["position"]);
+            transform.position = getVariable<Vector3>("position");
         }
 	}
 }

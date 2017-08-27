@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TrajectoryTakeoff : TrajectoryMultiLines
+public class TrajectoryLand : TrajectoryMultiLines
 {
     // Use this for initialization
     protected override void Awake()
@@ -10,10 +10,10 @@ public class TrajectoryTakeoff : TrajectoryMultiLines
         base.Awake();
 
         Vector3 currentPosition = gameObject.GetComponent<Drone>().transform.position;
-        Vector3 expectedPosition = new Vector3(currentPosition.x, 1.5f, currentPosition.z);
+        Vector3 expectedPosition = new Vector3(currentPosition.x, 0, currentPosition.z);
 
         setVariable("positions", new List<Vector3>() { currentPosition, expectedPosition });
         setVariable("loop", false);
-        setVariable("time", 1f);
+        setVariable("time", currentPosition.y);
     }
 }
