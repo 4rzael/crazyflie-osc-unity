@@ -31,8 +31,8 @@ public class ControlModeSlide : ControlMode
 
         Vector3 velocity = _controller.velocity;
         trajectoryManager.getTrajectory().setVariable("positions", new List<Vector3> {
-           _controller.getCurrentDrone().transform.position,
-           _controller.getCurrentDrone().transform.position + velocity,
+           _controller.GetCurrentDrone().transform.position,
+           _controller.GetCurrentDrone().transform.position + velocity,
         });
         trajectoryManager.getTrajectory().setVariable<float>("time", velocity.magnitude);
         trajectoryManager.getTrajectory().setVariable<Trajectory.SpeedFunction>("speed_function", speedFunction); // slow down trajectory

@@ -8,7 +8,7 @@ public class TrajectoryMultiLines : Trajectory
     private float _loopStartTimestamp;
     private Vector3 _lastPosition;
 
-    private float _currentDistance;
+    private float _currentDistance = 0;
     private float _totalDistance;
     private List<Point> _points;
 

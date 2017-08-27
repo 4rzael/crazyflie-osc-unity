@@ -14,6 +14,8 @@ public class TrajectoryManager : MonoBehaviour {
         JUGGLE_HORIZONTAL = 3,
         CIRCLE = 4,
         TAKEOFF = 5,
+        LAND = 6,
+        FOLLOW_POINT = 7,
     }
 
     private Dictionary<TrajectoryType, Type> _possibleTrajectories = new Dictionary<TrajectoryType, Type>
@@ -24,6 +26,8 @@ public class TrajectoryManager : MonoBehaviour {
             {TrajectoryType.JUGGLE_HORIZONTAL, typeof(TrajectoryJuggleHorizontal)},
             {TrajectoryType.CIRCLE, typeof(TrajectoryCircle)},
             {TrajectoryType.TAKEOFF, typeof(TrajectoryTakeoff)},
+            {TrajectoryType.LAND, typeof(TrajectoryLand)},
+            {TrajectoryType.FOLLOW_POINT, typeof(TrajectoryFollowPoint)}
         };
 
     private Trajectory currentTrajectory;

@@ -15,7 +15,7 @@ public class ControlMode {
     }
 
     public virtual void start() {
-        trajectoryManager = _controller.getCurrentDroneTrajectoryManager();
+        trajectoryManager = _controller.GetCurrentDroneTrajectoryManager();
     }
 
     public virtual void end() { _ended = true; }

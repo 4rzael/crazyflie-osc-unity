@@ -21,18 +21,18 @@ class ControllerEditor : Editor
         {
             if (GUILayout.Button(c))
             {
-                controller.selectDroneByInput(c);
+                controller.SelectDroneByInput(c);
             }
         }
 
 
-        string[] controlModeCommands = {"thumb+2", "thumb+3", "thumb+4", "thumb+5", };
+        string[] controlModeCommands = {"thumb+2", "thumb+3", "thumb+4", "thumb+5", "nothing"};
 
         foreach(string c in controlModeCommands)
         {
             if (GUILayout.Button(c))
             {
-                controller.setControlMode(c);
+                controller.SetControlMode(c);
             }
         }
     }

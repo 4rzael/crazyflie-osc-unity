@@ -60,7 +60,10 @@ public class Drone : MonoBehaviour
 
     // Real Position marker
     private Vector3 _rollPitchYaw;
+    private bool _rollPitchYawChanged = false;
     private Vector3 _realPosition = Vector3.zero;
+    private bool _realPositionChanged = false;
+
     private GameObject _realPositionMarker;
     private Color _color;
 
@@ -409,6 +412,8 @@ public class Drone : MonoBehaviour
         }
         else
             _realPosition = position;
+
+        _realPositionChanged = true;
         if (PositionEvent != null) PositionEvent(this, position);
     }
 
@@ -421,6 +426,7 @@ public class Drone : MonoBehaviour
     protected void OnRollPitchYaw(Vector3 rpy)
     {
         _rollPitchYaw = rpy;
+        _rollPitchYawChanged = true;
         if (RollPitchYawEvent != null) RollPitchYawEvent(this, rpy);
     }
 
@@ -488,8 +494,16 @@ public class Drone : MonoBehaviour
     void Update()
     {
         // update UI stuff
-        this.SetRealPositionMarkerPosition(this._realPosition);
-        this.SetRealPositionMarkerRotation(Quaternion.Euler(-_rollPitchYaw[0], -_rollPitchYaw[2], _rollPitchYaw[1]));
+        if (_realPositionChanged)
+        {
+            this.SetRealPositionMarkerPosition(this._realPosition);
+            _realPositionChanged = false;
+        }
+        if (_rollPitchYawChanged)
+        {
+            this.SetRealPositionMarkerRotation(Quaternion.Euler(-_rollPitchYaw[0], -_rollPitchYaw[2], _rollPitchYaw[1]));
+            _rollPitchYawChanged = false;
+        }
         this._batterySlider.value = this._battery;
 
         // update goal

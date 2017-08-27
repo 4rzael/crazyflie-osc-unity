@@ -69,7 +69,7 @@ public class Trajectory : MonoBehaviour {
     }
     protected virtual void onStart() { }
 
-    protected void stopTrajectory()
+    public void stopTrajectory()
     {
         this.started = false;
         this.onStop();
