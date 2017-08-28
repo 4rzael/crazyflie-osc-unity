@@ -1,144 +1,203 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityOSC;
-using System;
 
+/// <summary>
+/// Manage <see cref="Drone"/> instances, by creating/deleting them.
+/// Also provides functions to find Drones, and to broadcast functions to them.
+/// </summary>
 [ExecuteInEditMode]
 public class DronesManager : MonoBehaviour {
-
-	public GameObject dronePrefab;
+    #region Public properties
+    public GameObject dronePrefab;
 	public string droneOscTopic = "/crazyflie";
 	public DroneConfig[] dronesConfigs;
+    #endregion
 
-	private List<GameObject> _drones;
-	private OscManager oscManager;
-	private UnityOSC.OSCClient oscClient;
 
-	[Serializable]
-	public class DroneConfig
-	{
-		public string radio_uri;
-		public Color color;
-		public int viz_id; // ONLY USED BY EDITOR
+    #region Private properties
+    private List<GameObject> _dronesGameObjects;
+    private bool _createdDrones = false;
+    #endregion
 
-		public DroneConfig()
-		{
-			radio_uri = "radio://0/80/2M/E7E7E7E7E7";	
-		}
-	}
 
-	private void cleanDronesList () {
-		this._drones.RemoveAll (n => n == null);
-	}
-
-	private void initDrones () {
-		foreach (GameObject drone in this._drones) {
-			drone.GetComponent<Drone> ().init(this.oscClient, this.oscManager);
-		}
-	}
-
-	private void findDrones () {
-		this._drones = new List<GameObject>(GameObject.FindGameObjectsWithTag("Drone"));
-		this._drones.Sort (Drone.compareDrones);
-	}
-
-	/* PUBLIC METHODS */
-
-	public void removeDrones () {
-		foreach (GameObject drone in this._drones)
-		{
-			if (drone != null) {
-				GameObject.DestroyImmediate (drone);
-			}
-		}
-		this._drones.Clear ();
-	}
-
-	public void configDrones () {
-		int id = 0;
-		this.initDrones ();
-		foreach (DroneConfig droneConfig in this.dronesConfigs) {
-			Drone drone = this._drones.Find(d => d.GetComponent<Drone>().id == id).GetComponent<Drone>();
-			drone.radio_uri = droneConfig.radio_uri;
-			drone.baseTopic = this.droneOscTopic;
-			++id;
-		}
-	}
-
-	public void recreateDrones () {
-		this.removeDrones ();
-		int id = 0;
-		foreach (DroneConfig droneConfig in this.dronesConfigs) {
-			GameObject go = GameObject.Instantiate (dronePrefab, Vector3.zero, Quaternion.identity);
-			go.name = string.Format("Drone_{0}", id.ToString ());
-			Drone drone = go.GetComponent<Drone> ();
-			drone.setColor (droneConfig.color);
-			drone.id = id;
-			this._drones.Add (go);
-			++id;
-		}
-
-		this.configDrones ();
-	}
-
-    public List<GameObject> getDrones ()
-    {
-        return this._drones;
+    #region Basic drone management methods
+    /// <summary>
+    /// Destroys the drones GameObjects.
+    /// </summary>
+    public void DestroyDrones() {
+        foreach (GameObject drone in this._dronesGameObjects)
+        {
+            if (drone != null)
+            {
+                GameObject.DestroyImmediate(drone);
+            }
+        }
+        this._dronesGameObjects.Clear();
     }
 
-    public GameObject getDroneById (int id)
+    /// <summary>
+    /// Destroys the drones if created by this manager.
+    /// </summary>
+    public void DestroyDronesIfCreated()
     {
-        return getDrones().Find(go => go.GetComponent<Drone>().id == id);
+        if (_createdDrones)
+            DestroyDrones();
     }
 
-/* PROXIES TO DRONES FUNCTIONS */
+    /// <summary>
+    /// Recreates the drones.
+    /// </summary>
+    public void RecreateDrones() {
+        this.DestroyDrones();
+        int id = 0;
+        foreach (DroneConfig droneConfig in dronesConfigs)
+        {
+            if (droneConfig.is_active)
+            {
+                GameObject go = GameObject.Instantiate(dronePrefab, Vector3.zero, Quaternion.identity);
+                go.name = string.Format("Drone_{0}", id.ToString());
+                Drone drone = go.GetComponent<Drone>();
+                drone.Initialize(id, droneConfig.radio_uri, this.droneOscTopic);
+                drone.SetColor(droneConfig.color);
+                this._dronesGameObjects.Add(go);
+            }
+            ++id;
+        }
+        _createdDrones = true;
+    }
+    #endregion
 
-	public void connectDronesOsc () {
-		this.cleanDronesList ();
-		foreach (GameObject drone in this._drones) {
-			drone.GetComponent<Drone> ().connect ();
+
+    #region Drones getters
+    /// <summary>
+    /// Gets the drones game objects.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerable<GameObject> GetDronesGameObjects() {
+        CleanDronesList();
+        return _dronesGameObjects;
+    }
+    /// <summary>
+    /// Gets the drones.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerable<Drone> GetDrones() {
+        return GetDronesGameObjects().Select(go => go.GetComponent<Drone>());
+    }
+    /// <summary>
+    /// Gets the drone game object by identifier.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
+    public GameObject GetDroneGameObjectById(int id) {
+        return GetDronesGameObjects().FirstOrDefault(go => go.GetComponent<Drone>().Id == id);
+    }
+    /// <summary>
+    /// Gets the drone by identifier.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
+    public Drone GetDroneById(int id) {
+        return GetDroneGameObjectById(id).GetComponent<Drone>();
+    }
+    #endregion
+
+
+    # region Private utils
+    /// <summary>
+    /// Finds the drones in the current scene.
+    /// </summary>
+    private void FindDrones() {
+        this._dronesGameObjects = new List<GameObject>(GameObject.FindGameObjectsWithTag("Drone"));
+        this._dronesGameObjects.Sort(Drone.CompareDrones);
+    }
+
+    /// <summary>
+    /// Cleans the drones list by removing null references.
+    /// </summary>
+    private void CleanDronesList () {
+		this._dronesGameObjects.RemoveAll (n => n == null);
+	}
+    /// <summary>
+    /// Gets the active drone configs.
+    /// </summary>
+    /// <returns>The list of active configs</returns>
+    private IEnumerable<DroneConfig> GetActiveDroneConfigs()
+    {
+        return dronesConfigs.Where(dc => dc.is_active == true);
+    }
+    #endregion
+
+
+    #region Proxies to Drone methods
+    /// <summary>
+    /// PROXY : Asks every drone to connect.
+    /// </summary>
+    public void ConnectDrones () {
+		this.CleanDronesList ();
+        Debug.Log(GetDrones().Count());
+		foreach (Drone drone in GetDrones()) {
+			drone.Connect ();
 		}
 	}
 
-	public void resetKalmanFilters () {
-		this.cleanDronesList ();
-		foreach (GameObject drone in this._drones) {
-			drone.GetComponent<Drone> ().resetKalmanFilter ();
-		}
-	}
+    /// <summary>
+    /// PROXY : Asks every drone to reset their kalman filter.
+    /// </summary>
+    public void ResetKalmanFilters () {
+		this.CleanDronesList ();
+        foreach (Drone drone in GetDrones())
+        {
+            drone.ResetKalmanFilter();
+        }
+    }
 
-	public void startPositionSync() {
-		this.cleanDronesList ();
-		foreach (GameObject drone in this._drones) {
-			drone.GetComponent<Drone> ().startPositionSync ();
-		}
-	}
+    /// <summary>
+    /// PROXY : Asks every drone to start the position sync.
+    /// </summary>
+    public void StartPositionSync() {
+		this.CleanDronesList ();
+        foreach (Drone drone in GetDrones())
+        {
+            drone.StartPositionSync();
+        }
+    }
 
-	public void stopPositionSync() {
-		this.cleanDronesList ();
-		foreach (GameObject drone in this._drones) {
-			drone.GetComponent<Drone> ().stopPositionSync ();
-		}
-	}
-		
-	// Use this for initialization
-	public void Awake () {
-		this.findDrones ();
+    /// <summary>
+    /// PROXY : Asks every drone to stop the position sync.
+    /// </summary>
+    public void StopPositionSync() {
+		this.CleanDronesList ();
+        foreach (Drone drone in GetDrones())
+        {
+            drone.StopPositionSync();
+        }
+    }
 
-		this.oscManager = GameObject.Find ("OscManager").GetComponent<OscManager> ();
-		this.oscClient = this.oscManager.createClient ("drones");
+    /// <summary>
+    /// PROXY : Asks every drone to send emergency signals.
+    /// </summary>
+    public void SendEmergencySignals()
+    {
+        this.CleanDronesList();
+        foreach (Drone drone in GetDrones())
+        {
+            drone.SendEmergencySignal();
+        }
+    }
+    #endregion
 
-		this.initDrones ();
+
+    #region Unity specific methods
+    public void Awake () {
+		this.FindDrones ();
 
 		if (Application.isPlaying) {
-			if (this._drones.Count < this.dronesConfigs.Length)
-				this.recreateDrones ();
+			if (this._dronesGameObjects.Count < GetActiveDroneConfigs().Count())
+				this.RecreateDrones ();
 		}
 
 	}
-
-	// Update is called once per frame
-	void Update () {
-	}
+    #endregion
 }

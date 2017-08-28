@@ -55,6 +55,23 @@ MonoBehaviour:
     type: 2}
   droneOscTopic: /crazyflie
   dronesConfigs:
-  - radio_uri: radio://0/80/2M/E7E7E7E703
-    color: {r: 0, g: 0.71799934, b: 0.29711857, a: 1}
+  - is_active: 1
+    radio_uri: radio://0/20/2M/E7E7E7E701
+    color: {r: 0.94482756, g: 0, b: 1, a: 1}
     viz_id: 0
+  - is_active: 1
+    radio_uri: radio://0/40/2M/E7E7E7E702
+    color: {r: 0, g: 0.66896534, b: 1, a: 1}
+    viz_id: 1
+  - is_active: 1
+    radio_uri: radio://0/60/2M/E7E7E7E703
+    color: {r: 0, g: 1, b: 0.2965517, a: 1}
+    viz_id: 2
+  - is_active: 1
+    radio_uri: radio://0/80/2M/E7E7E7E704
+    color: {r: 0.9448277, g: 1, b: 0, a: 1}
+    viz_id: 3
+  - is_active: 1
+    radio_uri: radio://0/100/2M/E7E7E7E705
+    color: {r: 1, g: 0.25735295, b: 0.25735295, a: 1}
+    viz_id: 4

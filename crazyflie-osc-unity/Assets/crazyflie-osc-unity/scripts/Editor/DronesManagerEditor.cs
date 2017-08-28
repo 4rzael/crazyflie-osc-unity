@@ -9,46 +9,40 @@ class DronesManagerEditor : Editor {
 
 		DronesManager dronesManager = (DronesManager)target;
 		MonitorArray.monitor(target, "arrayone", dronesManager.dronesConfigs, (int i) => {
-			dronesManager.dronesConfigs[i] = new DronesManager.DroneConfig();
+			dronesManager.dronesConfigs[i] = new DroneConfig(i);
 			dronesManager.dronesConfigs[i].color = UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
-			dronesManager.dronesConfigs[i].viz_id = i;
 		});
 
 		DrawDefaultInspector();
 
-		if (GUILayout.Button ("START")) {
-			dronesManager.Awake ();
-		}
-
-
 		if (GUILayout.Button ("Recreate drones")) {
-			dronesManager.recreateDrones ();
-		}
-
-		if (GUILayout.Button ("Config drones")) {
-			dronesManager.configDrones ();
+			dronesManager.RecreateDrones ();
 		}
 
 		if (GUILayout.Button ("Remove drones")) {
-			dronesManager.removeDrones ();
+			dronesManager.DestroyDrones ();
 		}
 
 		// OSC actions
 
 		if (GUILayout.Button ("OSC - Connect - all")) {
-			dronesManager.connectDronesOsc ();
+			dronesManager.ConnectDrones ();
 		}
 
 		if (GUILayout.Button ("OSC - Start Position Sync")) {
-			dronesManager.startPositionSync ();
+			dronesManager.StartPositionSync ();
 		}
 		if (GUILayout.Button ("OSC - Stop Position Sync")) {
-			dronesManager.stopPositionSync ();
+			dronesManager.StopPositionSync ();
 		}
 
 		if (GUILayout.Button ("OSC - Reset Kalman Filter - all")) {
-			dronesManager.resetKalmanFilters();
+			dronesManager.ResetKalmanFilters();
 		}
 
-	}
+        if (GUILayout.Button("OSC - EMERGENCY - all"))
+        {
+            dronesManager.SendEmergencySignals();
+        }
+    }
 }

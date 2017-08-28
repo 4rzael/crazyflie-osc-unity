@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Represents a LPS anchor.
+/// </summary>
 public class LpsNode : MonoBehaviour {
 
 	public int id;

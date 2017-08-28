@@ -1,8 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityOSC;
 
+/// <summary>
+/// Manages the LPS system.
+/// Creates GameObjects to represent anchors in Unity, and sends their position to the OSC server.
+/// </summary>
 [ExecuteInEditMode]
 public class LpsManager : MonoBehaviour {
 
@@ -14,8 +19,10 @@ public class LpsManager : MonoBehaviour {
 	private OscManager oscManager;
 	private UnityOSC.OSCClient oscClient;
 
-
-	private void cleanNodeList () {
+    /// <summary>
+    /// Cleans the node list by removing null references.
+    /// </summary>
+    private void cleanNodeList () {
 		this._lpsNodes.RemoveAll (n => n == null);
 	}
 
@@ -28,14 +35,30 @@ public class LpsManager : MonoBehaviour {
 	}
 
 
-	private void findNodes () {
+    /// <summary>
+    /// Finds the nodes GameObjects in the current scene.
+    /// </summary>
+    private void findNodes () {
 		this._lpsNodes = new List<GameObject>(GameObject.FindGameObjectsWithTag("LpsNode"));
 		this._lpsNodes.Sort (LpsNode.compareNodes);
 	}
 
-	/* PUBLIC METHODS */
+    /* PUBLIC METHODS */
 
-	public void removeNodes () {
+    /// <summary>
+    /// Gets the node by identifier.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <returns></returns>
+    public GameObject getNodeById(int id)
+    {
+        return _lpsNodes[id];
+    }
+
+    /// <summary>
+    /// Removes the LPS nodes GameObjects.
+    /// </summary>
+    public void removeNodes () {
 		foreach (GameObject node in this._lpsNodes)
 		{
 			if (node != null) {
@@ -44,9 +67,12 @@ public class LpsManager : MonoBehaviour {
 		}
 		this._lpsNodes.Clear ();
 	}
-		
 
-	public void recreateNodes () {
+
+    /// <summary>
+    /// Recreates the LPS nodes from this manager configuration.
+    /// </summary>
+    public void recreateNodes () {
 		this.removeNodes ();
 		int id = 0;
 		foreach (Vector3 nodePosition in this.lpsNodesPositions)
@@ -59,18 +85,24 @@ public class LpsManager : MonoBehaviour {
 		}
 	}
 
-	public void sendConfigOsc () {
+    /// <summary>
+    /// Sends the LPS configuration through OSC.
+    /// </summary>
+    public void sendConfigOsc () {
 		this.printNodes ();
 		int id = 0;
-		this.oscManager.sendOscMessage (this.oscClient, string.Format("{0}/get_node_number", this.lpsOscTopic), this.lpsNodesPositions.Length);
+		this.oscManager.SendOscMessage (this.oscClient, string.Format("{0}/get_node_number", this.lpsOscTopic), this.lpsNodesPositions.Length);
 		foreach (Vector3 position in this.lpsNodesPositions) {
 			string topic = string.Format ("{0}/{1}/set_position", this.lpsOscTopic, id.ToString ());
-			this.oscManager.sendOscMessage (this.oscClient, topic, position.x, position.z, position.y);
+			this.oscManager.SendOscMessage (this.oscClient, topic, position.x, position.z, position.y);
 			++id;
 		}
 	}
 
-	public void savePositions () {
+    /// <summary>
+    /// Get the GameObjects current positions and save them in this manager.
+    /// </summary>
+    public void savePositions () {
 		int i = 0;
 		this.cleanNodeList ();
 		foreach (GameObject node in this._lpsNodes) {

@@ -4,6 +4,11 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityOSC;
 
+/// <summary>
+/// A simple tool for debugging.
+/// Should be put in the Drone class later.
+/// Gives an interface to tune the values of the Position-Control PID in realtime.
+/// </summary>
 public class PidPositionController : MonoBehaviour {
 
     public Dictionary<string, float> variables = new Dictionary<string, float>();
@@ -17,16 +22,15 @@ public class PidPositionController : MonoBehaviour {
 	void Start () {
         oscManager = GameObject.Find("OscManager").GetComponent<OscManager>();
 
-        string toSubscribe = "/param/" + gameObject.GetComponent<Drone>().id.ToString() + "/posCtlPid/{variable_name}";
+        string toSubscribe = "/param/" + gameObject.GetComponent<Drone>().Id.ToString() + "/posCtlPid/{variable_name}";
 
-        Debug.Log(toSubscribe);
-        oscManager.OscSubscribe(toSubscribe, onVariable);
+        oscManager.OscSubscribe(toSubscribe, OnVariable);
         _oscClient = oscManager.createClient("drones");
 
-        _askForMoreParams = StartCoroutine(askForParams());
+        _askForMoreParams = StartCoroutine(AskForParams());
 	}
 
-    private void onVariable(string topic, OSCPacket packet, GroupCollection path_args)
+    private void OnVariable(string topic, OSCPacket packet, GroupCollection path_args)
     {
         float value = float.Parse(packet.Data[0].ToString());
 
@@ -34,17 +38,17 @@ public class PidPositionController : MonoBehaviour {
         shouldStopCoroutine = true;
     }
 
-    public void setVariable(string key, float value)
+    public void SetVariable(string key, float value)
     {
         variables[key] = value;
-        oscManager.sendOscMessage(_oscClient, string.Format("/param/{0}/posCtlPid/{1}/set", gameObject.GetComponent<Drone>().id, key), value);
+        gameObject.GetComponent<Drone>().SetParam("posCtlPid", key, value);
     }
 
-    IEnumerator askForParams()
+    IEnumerator AskForParams()
     {
         yield return new WaitForSeconds(10);
         Debug.Log("ASKING FOR MORE INFORMATION ON PARAMS");
-        oscManager.sendOscMessage(_oscClient, string.Format("/param/{0}/get_all_values", gameObject.GetComponent<Drone>().id));
+        oscManager.SendOscMessage(_oscClient, string.Format("/param/{0}/get_all_values", gameObject.GetComponent<Drone>().Id));
     }
 
     public void Update()

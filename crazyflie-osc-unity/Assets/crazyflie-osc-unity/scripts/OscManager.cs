@@ -8,12 +8,17 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Linq;
 
+/// <summary>
+/// Wrapper around the UnityOSC library.
+/// Handles everything OSC-related.
+/// Allows to send OSC messages and to subscribe to OSC topics.
+/// </summary>
 public class OscManager : MonoBehaviour {
 	[Serializable]
 	public struct DistantOsc {
 		public string name;
 		public string ip;
-		public short port;
+		public ushort port;
 	}
 
 	public delegate void OscSubscribeCallback(string topic, OSCPacket packet, GroupCollection path_args);
@@ -26,16 +31,25 @@ public class OscManager : MonoBehaviour {
 	public short localPort = 6006;
 	public DistantOsc[] servers;
 
+    public bool shouldPrintDebugMessages = true;
+
 	private OSCServer _localServer;
 	private List<OscSubscriber> _serverSubscriber = new List<OscSubscriber>();
 	private List<OSCClient> _localClients = new List<OSCClient>();
 
-	public DistantOsc getOscDistantServer(string name) {
+	private DistantOsc GetOscDistantServer(string name) {
 		return Array.Find<DistantOsc> (this.servers, s => s.name == name);
 	}
 
-	public void sendOscMessage(OSCClient client, string topic, params object[] values) {
-		Debug.LogFormat ("sending message on {0}", topic);
+    /// <summary>
+    /// Sends an OSC message.
+    /// </summary>
+    /// <param name="client">The OSC client to send from.</param>
+    /// <param name="topic">The OSC topic.</param>
+    /// <param name="values">The values to send.</param>
+    public void SendOscMessage(OSCClient client, string topic, params object[] values) {
+        if (shouldPrintDebugMessages)
+    		Debug.LogFormat ("sending message on {0}", topic);
 		OSCMessage msg = new OSCMessage (topic);
 		foreach (object val in values) {
 			Type val_type = val.GetType ();
@@ -49,8 +63,13 @@ public class OscManager : MonoBehaviour {
 		client.Send (msg);
 	}
 
-	public OSCClient createClient(string server) {
-		OscManager.DistantOsc oscDestination = this.getOscDistantServer (server);
+    /// <summary>
+    /// Creates an OSC client.
+    /// </summary>
+    /// <param name="server">The server to connect the client to.</param>
+    /// <returns></returns>
+    public OSCClient createClient(string server) {
+		OscManager.DistantOsc oscDestination = this.GetOscDistantServer (server);
 
 		IPAddress ip = IPAddress.Parse(oscDestination.ip);
 		OSCClient c = new UnityOSC.OSCClient (ip, (int)(oscDestination.port));
@@ -58,7 +77,12 @@ public class OscManager : MonoBehaviour {
 		return c;
 	}
 
-	private void OnPacketReceived(OSCServer server, OSCPacket packet) {
+    /// <summary>
+    /// Called when [packet received].
+    /// </summary>
+    /// <param name="server">The distant server that sent the packet.</param>
+    /// <param name="packet">The packet received.</param>
+    private void OnPacketReceived(OSCServer server, OSCPacket packet) {
 		bool handled = false;
 
 		foreach (OscSubscriber sub in this._serverSubscriber) {
@@ -78,34 +102,54 @@ public class OscManager : MonoBehaviour {
 
 	void Awake() {
 		this._localServer = new OSCServer (this.localPort);
-		Debug.LogFormat ("Server Listening on {0}", this.localPort.ToString ());
-        this._localServer.SleepMilliseconds = 1; // If not set to very low value, we get a VERY HIGH input latency (May go up to 5-10 seconds)
+        if (shouldPrintDebugMessages)
+    		Debug.LogFormat ("Server Listening on {0}", this.localPort.ToString ());
+        this._localServer.SleepMilliseconds = 0; // If not set to very low value, we get a VERY HIGH input latency (May go up to 5-10 seconds)
 		this._localServer.PacketReceivedEvent += this.OnPacketReceived;
 	}
 
-	public void OscSubscribe(string topicRegexLike, OscSubscribeCallback callback) {
-		Debug.LogFormat ("OSC SUBSCRIBE ON {0}", topicRegexLike);
+    /// <summary>
+    /// Subscribes to an OSC topic.
+    /// "regex"-like notation means :
+    /// `{variable_name}` to accept anything and store it as `variable_name`
+    /// `*` to accept anything
+    /// </summary>
+    /// <param name="topicRegexLike">The topic ("regex"-like notation).</param>
+    /// <param name="callback">The callback to call on packet reception.</param>
+    public void OscSubscribe(string topicRegexLike, OscSubscribeCallback callback) {
+        if (shouldPrintDebugMessages)
+    		Debug.LogFormat ("OSC SUBSCRIBE ON {0}", topicRegexLike);
         topicRegexLike = Regex.Escape(topicRegexLike);
 		topicRegexLike = "^" + topicRegexLike + "$";
 		OscSubscriber sub = new OscSubscriber ();
-        Debug.LogFormat("Regexified0 : {0}", topicRegexLike);
         string regexified = Regex.Replace(topicRegexLike, Regex.Escape(Regex.Escape("*")), ".*");
-        Debug.LogFormat("Regexified1 : {0}", regexified);
         regexified = Regex.Replace(regexified, "\\\\{(.+?)}", "(?<$1>.+)");
-        Debug.LogFormat("Regexified2 : {0}", regexified);
 		sub.topicRegex = new Regex(regexified);
 		sub.callback = callback;
 		this._serverSubscriber.Add (sub);
 	}
 
-	public void Stop() 
+    /// <summary>
+    /// Stops this instance.
+    /// </summary>
+    public void Stop() 
 	{
-		this._localServer.Close ();
+        if (this._localServer != null)
+        {
+            this._localServer.Close();
+            this._localServer = null;
+        }
 
 		foreach(OSCClient c in this._localClients)
 		{
 			c.Close ();
 		}
+        this._localClients.Clear();
 	}
+
+    private void OnDestroy()
+    {
+        Stop();
+    }
 
 }

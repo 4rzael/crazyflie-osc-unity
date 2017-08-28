@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ControlModeJuggleHorizontal : ControlMode {
-
-    public ControlModeJuggleHorizontal(Controller c) : base(c) { }
+public class ControlModeLand : ControlMode
+{
+    public ControlModeLand(Controller c) : base(c) { }
 
     public override void start()
     {
         base.start();
-
-        trajectoryManager.setTrajectory(TrajectoryManager.TrajectoryType.JUGGLE_HORIZONTAL);
+        trajectoryManager.setTrajectory(TrajectoryManager.TrajectoryType.LAND);
     }
 
 
@@ -18,8 +17,6 @@ public class ControlModeJuggleHorizontal : ControlMode {
     {
         base.end();
 
-        Vector3 velocity = _controller.velocity;
-        trajectoryManager.getTrajectory().setVariable("hand_vector", velocity);
         trajectoryManager.getTrajectory().startTrajectory();
     }
 

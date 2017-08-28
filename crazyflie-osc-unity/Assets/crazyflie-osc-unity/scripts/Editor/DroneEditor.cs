@@ -12,19 +12,26 @@ class DroneEditor : Editor {
 		DrawDefaultInspector();
 
 		if (GUILayout.Button ("OSC - Connect")) {
-			drone.connect ();
+			drone.Connect ();
 		}
 		if (GUILayout.Button ("OSC - Start Position Sync")) {
-			drone.startPositionSync ();
+			drone.StartPositionSync ();
 		}
 		if (GUILayout.Button ("OSC - Stop Position Sync")) {
-			drone.stopPositionSync ();
+			drone.StopPositionSync ();
 		}
 		if (GUILayout.Button ("OSC - Reset Kalman Filter")) {
-			drone.resetKalmanFilter();
+			drone.ResetKalmanFilter();
 		}
         if (GUILayout.Button("OSC - EMERGENCY")) {
-            drone.EMERGENCY();
+            drone.SendEmergencySignal();
+        }
+
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider); // Separator
+        EditorGUILayout.LabelField("DEBUG ONLY");
+        if (GUILayout.Button("UPDATE LOWPASS FILTER"))
+        {
+            drone.UpdateLowPassFilterWindowSize(drone.PositionEstimationLowPassFilterWindowSize);
         }
 
     }

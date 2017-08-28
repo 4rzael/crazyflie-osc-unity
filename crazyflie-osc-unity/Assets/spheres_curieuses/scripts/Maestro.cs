@@ -34,7 +34,7 @@ public class Maestro : MonoBehaviour {
         if (_sceneManager.isInitialized() == false)
             return;
 
-        IEnumerable<TrajectoryManager> drones = _dronesManager.getDrones().Select(d => d.GetComponent<TrajectoryManager>());
+        IEnumerable<TrajectoryManager> drones = _dronesManager.GetDrones().Select(d => d.GetComponent<TrajectoryManager>());
         foreach (TrajectoryManager drone in drones)
         {
             //drone.setTrajectory(TrajectoryManager.TrajectoryType.HOVER);
@@ -57,13 +57,16 @@ public class Maestro : MonoBehaviour {
             //drone.getTrajectory().setVariable("time_multiplier", 0.5f);
             //drone.getTrajectory().startTrajectory();
 
-            //drone.setTrajectory(TrajectoryManager.TrajectoryType.CIRCLE);
-            //drone.getTrajectory().setVariable("center", new Vector3 (1f, 2f, 1f));
-            //drone.getTrajectory().setVariable("normal_vector", new Vector3(-1f, 1f, 0f));
-            //drone.getTrajectory().setVariable("radius", 1.0f);
-            //drone.getTrajectory().setVariable("time", 5.0f);
-            //drone.getTrajectory().setVariable<Trajectory.SpeedFunction>("speed_function", x => 3 * Mathf.Pow(x, 2));
-            //drone.getTrajectory().startTrajectory();
+            //            drone.setTrajectory(TrajectoryManager.TrajectoryType.CIRCLE);
+            //            drone.getTrajectory().setVariable("center", new Vector3(2f, 2f, 2f));
+            //            drone.getTrajectory().setVariable("normal_vector", new Vector3(0f, 1f, 0f));
+            //            drone.getTrajectory().setVariable("radius", 0.75f);
+            //            drone.getTrajectory().setVariable("time", 5.0f);
+            ////            drone.getTrajectory().setVariable<Trajectory.SpeedFunction>("speed_function", x => 3 * Mathf.Pow(x, 2));
+            //            drone.getTrajectory().startTrajectory();
+
+            drone.setTrajectory(TrajectoryManager.TrajectoryType.TAKEOFF);
+            drone.getTrajectory().startTrajectory();
 
             //drone.setTrajectory(TrajectoryManager.TrajectoryType.JUGGLE_HORIZONTAL);
             //drone.getTrajectory().setVariable("hand_vector", new Vector3(1f, 5f, 10f));

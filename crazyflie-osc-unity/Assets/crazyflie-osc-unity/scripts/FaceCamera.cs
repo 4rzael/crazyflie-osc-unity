@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Simple utilitary class used to make a GameObject face the camera.
+/// </summary>
 public class FaceCamera : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
 	void Update () {
 		transform.LookAt (Camera.main.transform.position);
 	}

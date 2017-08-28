@@ -13,6 +13,10 @@ public class TrajectoryManager : MonoBehaviour {
         JUGGLE_3D = 2,
         JUGGLE_HORIZONTAL = 3,
         CIRCLE = 4,
+        TAKEOFF = 5,
+        LAND = 6,
+        FOLLOW_POINT = 7,
+        MULTI_POINTS = 8,
     }
 
     private Dictionary<TrajectoryType, Type> _possibleTrajectories = new Dictionary<TrajectoryType, Type>
@@ -22,6 +26,10 @@ public class TrajectoryManager : MonoBehaviour {
             {TrajectoryType.JUGGLE_3D, typeof(TrajectoryJuggle3D)},
             {TrajectoryType.JUGGLE_HORIZONTAL, typeof(TrajectoryJuggleHorizontal)},
             {TrajectoryType.CIRCLE, typeof(TrajectoryCircle)},
+            {TrajectoryType.TAKEOFF, typeof(TrajectoryTakeoff)},
+            {TrajectoryType.LAND, typeof(TrajectoryLand)},
+            {TrajectoryType.FOLLOW_POINT, typeof(TrajectoryFollowPoint)},
+            {TrajectoryType.MULTI_POINTS, typeof(TrajectoryMultiPoints)},
         };
 
     private Trajectory currentTrajectory;
@@ -34,13 +42,14 @@ public class TrajectoryManager : MonoBehaviour {
         }
     }
 
-    public void setTrajectory(TrajectoryType type)
+    public Trajectory setTrajectory(TrajectoryType type)
     {
         this.removeTrajectories();
         if (_possibleTrajectories.ContainsKey(type))
         {
-            gameObject.AddComponent(_possibleTrajectories[type]);
+            return (Trajectory)gameObject.AddComponent(_possibleTrajectories[type]);
         }
+        return null;
     }
 
     public Trajectory getTrajectory()
