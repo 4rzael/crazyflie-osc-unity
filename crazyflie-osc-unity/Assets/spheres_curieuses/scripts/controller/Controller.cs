@@ -112,38 +112,40 @@ public class Controller : MonoBehaviour {
 
     private void Update()
     {
-        Debug.DrawLine(_handDrone.transform.position, _handDrone.transform.position + velocity, Color.red);
-        //Debug.DrawLine(_drone.transform.position, _drone.transform.position + acceleration, Color.blue);
-
-        Vector3 newPosition = _handDrone.GetComponent<Drone>().GetRealPosition();
-
-        if (newPosition != Vector3.zero)
+        if (_handDrone != null)
         {
-            // STORE POSITION, DERIVE VELOCITY AND ACCELERATION
-            position = newPosition;
+            Debug.DrawLine(_handDrone.transform.position, _handDrone.transform.position + velocity, Color.red);
+            //Debug.DrawLine(_drone.transform.position, _drone.transform.position + acceleration, Color.blue);
 
-            _lastPositions.AddLast(position);
-            DeleteAllFromLinkedList(_lastPositions, MathUtils.Vec3Stamped.tmsIsBefore(0.5f));
+            Vector3 newPosition = _handDrone.GetComponent<Drone>().GetRealPosition();
 
-            velocity = MathUtils.Vec3Stamped.average(_lastPositions);
-            _lastVelocities.AddLast(velocity);
-            DeleteAllFromLinkedList(_lastVelocities, MathUtils.Vec3Stamped.tmsIsBefore(0.5f));
-            if (velocity.magnitude < 1)
-                velocity = Vector3.zero;
+            if (newPosition != Vector3.zero)
+            {
+                // STORE POSITION, DERIVE VELOCITY AND ACCELERATION
+                position = newPosition;
 
-            acceleration = MathUtils.Vec3Stamped.average(_lastVelocities);
+                _lastPositions.AddLast(position);
+                DeleteAllFromLinkedList(_lastPositions, MathUtils.Vec3Stamped.tmsIsBefore(0.5f));
+
+                velocity = MathUtils.Vec3Stamped.average(_lastPositions);
+                _lastVelocities.AddLast(velocity);
+                DeleteAllFromLinkedList(_lastVelocities, MathUtils.Vec3Stamped.tmsIsBefore(0.5f));
+                if (velocity.magnitude < 1)
+                    velocity = Vector3.zero;
+
+                acceleration = MathUtils.Vec3Stamped.average(_lastVelocities);
+            }
+
+            // compute the pointing vector
+            if (_handDrone != null && _headDrone != null)
+            {
+                Vector3 handPosition = _handDrone.GetComponent<Drone>().GetRealPosition();
+                Vector3 shoulderPosition = _headDrone.GetComponent<Drone>().GetRealPosition() - new Vector3(0, 0.3f, 0); // 30cm between the head and the shoulders
+                pointingVector = handPosition - shoulderPosition;
+
+                Debug.DrawLine(handPosition, handPosition + pointingVector, Color.green);
+            }
         }
-
-        // compute the pointing vector
-        if (_handDrone != null && _headDrone != null)
-        {
-            Vector3 handPosition = _handDrone.GetComponent<Drone>().GetRealPosition();
-            Vector3 shoulderPosition = _headDrone.GetComponent<Drone>().GetRealPosition() - new Vector3(0, 0.3f, 0); // 30cm between the head and the shoulders
-            pointingVector = handPosition - shoulderPosition;
-
-            Debug.DrawLine(handPosition, handPosition + pointingVector, Color.green);
-        }
-
         this.HandleInputs();
         this.ClearInputs();
     }
