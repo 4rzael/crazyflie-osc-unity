@@ -1066,56 +1066,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
-    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
-        type: 2}
-      propertyPath: dronesConfigs.Array.data[0].is_active
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
-        type: 2}
-      propertyPath: dronesConfigs.Array.data[1].is_active
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
-        type: 2}
-      propertyPath: dronesConfigs.Array.data[2].is_active
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
-        type: 2}
-      propertyPath: dronesConfigs.Array.data[3].is_active
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
-        type: 2}
-      propertyPath: dronesConfigs.Array.data[0].radio_uri
-      value: radio://0/40/2M/E701010101
-      objectReference: {fileID: 0}
-    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
-        type: 2}
-      propertyPath: dronesConfigs.Array.data[1].radio_uri
-      value: radio://0/40/2M/E702020202
-      objectReference: {fileID: 0}
-    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
-        type: 2}
-      propertyPath: dronesConfigs.Array.data[2].radio_uri
-      value: radio://0/40/2M/E703030303
-      objectReference: {fileID: 0}
-    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
-        type: 2}
-      propertyPath: dronesConfigs.Array.data[3].radio_uri
-      value: radio://0/80/2M/E704040404
-      objectReference: {fileID: 0}
-    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
-        type: 2}
-      propertyPath: dronesConfigs.Array.data[4].radio_uri
-      value: radio://0/80/2M/E705050505
-      objectReference: {fileID: 0}
-    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
-        type: 2}
-      propertyPath: dronesConfigs.Array.data[4].is_active
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 64df5ae371a20a44fabdce1165cc1463, type: 2}
   m_IsPrefabParent: 0

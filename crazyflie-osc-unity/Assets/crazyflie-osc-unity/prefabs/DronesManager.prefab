@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4035048173390682}
   - component: {fileID: 114310917667681430}
+  - component: {fileID: 114381449801175988}
   m_Layer: 0
   m_Name: DronesManager
   m_TagString: Untagged
@@ -55,23 +56,39 @@ MonoBehaviour:
     type: 2}
   droneOscTopic: /crazyflie
   dronesConfigs:
-  - is_active: 1
-    radio_uri: radio://0/20/2M/E7E7E7E701
+  - is_active: 0
+    radio_uri: radio://0/40/2M/E701010101
     color: {r: 0.94482756, g: 0, b: 1, a: 1}
     viz_id: 0
-  - is_active: 1
-    radio_uri: radio://0/40/2M/E7E7E7E702
+  - is_active: 0
+    radio_uri: radio://0/40/2M/E702020202
     color: {r: 0, g: 0.66896534, b: 1, a: 1}
     viz_id: 1
-  - is_active: 1
-    radio_uri: radio://0/60/2M/E7E7E7E703
+  - is_active: 0
+    radio_uri: radio://0/40/2M/E703030303
     color: {r: 0, g: 1, b: 0.2965517, a: 1}
     viz_id: 2
   - is_active: 1
-    radio_uri: radio://0/80/2M/E7E7E7E704
+    radio_uri: radio://0/80/2M/E704040404
     color: {r: 0.9448277, g: 1, b: 0, a: 1}
     viz_id: 3
-  - is_active: 1
-    radio_uri: radio://0/100/2M/E7E7E7E705
+  - is_active: 0
+    radio_uri: radio://0/80/2M/E705050505
     color: {r: 1, g: 0.25735295, b: 0.25735295, a: 1}
     viz_id: 4
+--- !u!114 &114381449801175988
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1703137360678010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3751c8875ec0e24aa69e3e9ad10120f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effect: 7
+  color:
+    serializedVersion: 2
+    rgba: 4294967295
+  headlight: 0

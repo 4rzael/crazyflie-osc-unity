@@ -506,7 +506,8 @@ public class Drone : MonoBehaviour
             this.SetRealPositionMarkerRotation(Quaternion.Euler(-_rollPitchYaw[0], -_rollPitchYaw[2], _rollPitchYaw[1]));
             _rollPitchYawChanged = false;
         }
-        this._batterySlider.value = this._battery;
+        if (this._batterySlider != null)
+            this._batterySlider.value = this._battery;
 
         // update goal
         if (this._oscManager != null)
