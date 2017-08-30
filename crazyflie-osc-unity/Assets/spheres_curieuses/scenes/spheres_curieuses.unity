@@ -847,31 +847,6 @@ Prefab:
       propertyPath: debugText
       value: 
       objectReference: {fileID: 1376117819}
-    - target: {fileID: 114109813878618698, guid: 0a7bb7dcc3b0e7147b930ef88b73907e,
-        type: 2}
-      propertyPath: velocity.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114109813878618698, guid: 0a7bb7dcc3b0e7147b930ef88b73907e,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114109813878618698, guid: 0a7bb7dcc3b0e7147b930ef88b73907e,
-        type: 2}
-      propertyPath: _controllerDroneID
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114109813878618698, guid: 0a7bb7dcc3b0e7147b930ef88b73907e,
-        type: 2}
-      propertyPath: _handDroneID
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114109813878618698, guid: 0a7bb7dcc3b0e7147b930ef88b73907e,
-        type: 2}
-      propertyPath: _headDroneID
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0a7bb7dcc3b0e7147b930ef88b73907e, type: 2}
   m_IsPrefabParent: 0
@@ -1034,6 +1009,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
+        type: 2}
+      propertyPath: dronesConfigs.Array.size
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4035048173390682, guid: 64df5ae371a20a44fabdce1165cc1463, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1064,6 +1044,66 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4035048173390682, guid: 64df5ae371a20a44fabdce1165cc1463, type: 2}
       propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
+        type: 2}
+      propertyPath: dronesConfigs.Array.data[0].is_active
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
+        type: 2}
+      propertyPath: dronesConfigs.Array.data[1].is_active
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
+        type: 2}
+      propertyPath: dronesConfigs.Array.data[3].is_active
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
+        type: 2}
+      propertyPath: dronesConfigs.Array.data[2].is_active
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
+        type: 2}
+      propertyPath: dronesConfigs.Array.data[4].is_active
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
+        type: 2}
+      propertyPath: dronesConfigs.Array.data[5].is_active
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
+        type: 2}
+      propertyPath: dronesConfigs.Array.data[5].radio_uri
+      value: radio://0/105/2M/E7E7E7E7E7
+      objectReference: {fileID: 0}
+    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
+        type: 2}
+      propertyPath: dronesConfigs.Array.data[5].color.r
+      value: 0.9065686
+      objectReference: {fileID: 0}
+    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
+        type: 2}
+      propertyPath: dronesConfigs.Array.data[5].color.g
+      value: 0.25604886
+      objectReference: {fileID: 0}
+    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
+        type: 2}
+      propertyPath: dronesConfigs.Array.data[5].color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
+        type: 2}
+      propertyPath: dronesConfigs.Array.data[5].color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114310917667681430, guid: 64df5ae371a20a44fabdce1165cc1463,
+        type: 2}
+      propertyPath: dronesConfigs.Array.data[5].viz_id
       value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1391,21 +1431,6 @@ Prefab:
     - target: {fileID: 4255780382555234, guid: ef03d61b7c9637149afc68dc79967557, type: 2}
       propertyPath: m_RootOrder
       value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 114559431302748770, guid: ef03d61b7c9637149afc68dc79967557,
-        type: 2}
-      propertyPath: servers.Array.data[0].ip
-      value: 127.0.0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114559431302748770, guid: ef03d61b7c9637149afc68dc79967557,
-        type: 2}
-      propertyPath: servers.Array.data[1].ip
-      value: 127.0.0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114559431302748770, guid: ef03d61b7c9637149afc68dc79967557,
-        type: 2}
-      propertyPath: localIP
-      value: 127.0.0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ef03d61b7c9637149afc68dc79967557, type: 2}

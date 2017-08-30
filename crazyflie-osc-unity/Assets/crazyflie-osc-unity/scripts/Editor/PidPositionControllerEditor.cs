@@ -1,13 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEditor;
-using System;
-using System.Linq;
 
 [CustomEditor(typeof(PidPositionController))]
 class PidPositionControllerEditor : Editor
 {
+        private struct VarToChange
+        {
+            public string name;
+            public float value;
+            public VarToChange(string _name, float _value)
+            {
+                name = _name;
+                value = _value;
+            }
+        }
+
     Dictionary<string, float> variables = new Dictionary<string, float>();
 
     public override void OnInspectorGUI()
@@ -17,22 +25,22 @@ class PidPositionControllerEditor : Editor
 
         DrawDefaultInspector();
 
-        IEnumerable<string> keys = positionController.variables.Keys.OrderBy(s => new string(s.ToCharArray().Reverse().ToArray()));
+        IEnumerable<PidPositionController.PidVariable> variables = positionController.variables;
 
-        foreach (string key in keys)
+        List<VarToChange> toChange = new List<VarToChange>();
+
+        foreach (PidPositionController.PidVariable variable in variables)
         {
-            variables[key] = EditorGUILayout.Slider(key,
-                                   positionController.variables[key],
-                                   0,
-                                   Math.Max(positionController.variables[key], 100.0f));
-
+            float res = EditorGUILayout.Slider(variable.name,
+                                   variable.value,
+                                   variable.min,
+                                   variable.max);
+            if (res != variable.value)
+                toChange.Add(new VarToChange(variable.name, variable.value));
         }
-        foreach (string key in variables.Keys)
+        foreach (VarToChange v in toChange)
         {
-            if (variables[key] != positionController.variables[key])
-            {
-                positionController.SetVariable(key, variables[key]);
-            }
+            positionController.SetVariable(v.name, v.value);
         }
     }
 }
