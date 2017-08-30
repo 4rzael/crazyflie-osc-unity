@@ -285,6 +285,8 @@ public class Drone : MonoBehaviour
     {
         public string name;
         public string type;
+
+        public LogVariable(string _name, string _type) { name = _name; type = _type; }
     }
     /// <summary>
     /// Adds a log configuration to the drone.

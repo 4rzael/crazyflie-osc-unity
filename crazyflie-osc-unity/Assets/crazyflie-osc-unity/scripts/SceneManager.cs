@@ -62,12 +62,8 @@ public class SceneManager : MonoBehaviour {
             "/server/restart",
             1);
 
-        yield return new WaitForSeconds(1);
-
-        this._oscManager.SendOscMessage (this._drones_osc_client,
-			"/client/add",
-			this._oscManager.localIP,
-			(int)(this._oscManager.localPort));
+        yield return new WaitForSeconds(5);
+        ConnectClientToDroneServer();
 
 		print ("Waiting for LPS and Drones managers init");
 		yield return new WaitForSeconds (0.1f);
@@ -81,17 +77,17 @@ public class SceneManager : MonoBehaviour {
         print("Reseting kalman filters");
         _dronesManager.ResetKalmanFilters();
         print("Waiting for kalman filters to converge");
-        yield return new WaitForSeconds(5); // It may not be enough. TODO : compute real position variance and wait for it to converge
+        yield return new WaitForSeconds(1); // It may not be enough. TODO : compute real position variance and wait for it to converge
         //this._oscManager.SendOscMessage(this._drones_osc_client,
         //    "/log/*/send_toc");
         print("SYSTEM OK");
         this.system_initialized = true;
     }
 
-	public void EMERGENCY() {
-		this._oscManager.SendOscMessage (this._drones_osc_client,
-			"/crazyflie/*/emergency", 1);
-	}
+	//public void EMERGENCY() {
+	//	this._oscManager.SendOscMessage (this._drones_osc_client,
+	//		"/crazyflie/*/emergency", 1);
+	//}
 
     public void Stop() {
 		this._lpsManager.removeNodes ();
@@ -102,4 +98,13 @@ public class SceneManager : MonoBehaviour {
 	public void OnApplicationQuit() {
 		this.Stop ();
 	}
+
+    public void ConnectClientToDroneServer()
+    {
+        this._oscManager.SendOscMessage(this._drones_osc_client,
+            "/client/add",
+            this._oscManager.localIP,
+            (int)(this._oscManager.localPort));
+
+    }
 }

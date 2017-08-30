@@ -22,9 +22,10 @@ class SceneManagerEditor : Editor {
 			manager.Stop ();
 		}
 
-		if (GUILayout.Button ("EMERGENCY")) {
-			manager.EMERGENCY ();
-		}
+        if (GUILayout.Button ("Connect to drone server"))
+        {
+            manager.ConnectClientToDroneServer ();
+        }
 
         manager.shouldInitialize = EditorGUILayout.Toggle("should initialize ?", manager.shouldInitialize);
 

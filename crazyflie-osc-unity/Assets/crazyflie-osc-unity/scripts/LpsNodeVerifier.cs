@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityOSC;
 
 public class LpsNodeVerifier : MonoBehaviour {
+    public int droneId;
+
     private bool firstTimeSinceSceneInit = true;
     private SceneManager _sceneManager;
     private LpsManager _lpsManager;
@@ -32,20 +34,20 @@ public class LpsNodeVerifier : MonoBehaviour {
         if (firstTimeSinceSceneInit && _sceneManager.isInitialized())
         {
             firstTimeSinceSceneInit = false;
-            _oscManager.SendOscMessage(_oscClient, "/log/0/add", "tdoa1", 1000);
-            _oscManager.SendOscMessage(_oscClient, "/log/0/add", "tdoa2", 1000);
-            _oscManager.SendOscMessage(_oscClient, "/log/0/tdoa1/add_variable", "tdoa.d0", "float");
-            _oscManager.SendOscMessage(_oscClient, "/log/0/tdoa1/add_variable", "tdoa.d1", "float");
-            _oscManager.SendOscMessage(_oscClient, "/log/0/tdoa1/add_variable", "tdoa.d2", "float");
-            _oscManager.SendOscMessage(_oscClient, "/log/0/tdoa1/add_variable", "tdoa.d3", "float");
-            _oscManager.SendOscMessage(_oscClient, "/log/0/tdoa2/add_variable", "tdoa.d4", "float");
-            _oscManager.SendOscMessage(_oscClient, "/log/0/tdoa2/add_variable", "tdoa.d5", "float");
-            _oscManager.SendOscMessage(_oscClient, "/log/0/tdoa2/add_variable", "tdoa.d6", "float");
-            _oscManager.SendOscMessage(_oscClient, "/log/0/tdoa2/add_variable", "tdoa.d7", "float");
-            _oscManager.SendOscMessage(_oscClient, "/log/0/tdoa1/start");
-            _oscManager.SendOscMessage(_oscClient, "/log/0/tdoa2/start");
+            _oscManager.SendOscMessage(_oscClient, string.Format("/log/{0}/add", droneId), "tdoa1", 1000);
+            _oscManager.SendOscMessage(_oscClient, string.Format("/log/{0}/add", droneId), "tdoa2", 1000);
+            _oscManager.SendOscMessage(_oscClient, string.Format("/log/{0}/tdoa1/add_variable", droneId), "tdoa.d0", "float");
+            _oscManager.SendOscMessage(_oscClient, string.Format("/log/{0}/tdoa1/add_variable", droneId), "tdoa.d1", "float");
+            _oscManager.SendOscMessage(_oscClient, string.Format("/log/{0}/tdoa1/add_variable", droneId), "tdoa.d2", "float");
+            _oscManager.SendOscMessage(_oscClient, string.Format("/log/{0}/tdoa1/add_variable", droneId), "tdoa.d3", "float");
+            _oscManager.SendOscMessage(_oscClient, string.Format("/log/{0}/tdoa2/add_variable", droneId), "tdoa.d4", "float");
+            _oscManager.SendOscMessage(_oscClient, string.Format("/log/{0}/tdoa2/add_variable", droneId), "tdoa.d5", "float");
+            _oscManager.SendOscMessage(_oscClient, string.Format("/log/{0}/tdoa2/add_variable", droneId), "tdoa.d6", "float");
+            _oscManager.SendOscMessage(_oscClient, string.Format("/log/{0}/tdoa2/add_variable", droneId), "tdoa.d7", "float");
+            _oscManager.SendOscMessage(_oscClient, string.Format("/log/{0}/tdoa1/start", droneId));
+            _oscManager.SendOscMessage(_oscClient, string.Format("/log/{0}/tdoa2/start", droneId));
 
-            _oscManager.OscSubscribe("/log/0/tdoa*/tdoa.d{var_id}",
+            _oscManager.OscSubscribe("/log/"+droneId+"/tdoa*/tdoa.d{var_id}",
                 delegate (string topic, OSCPacket packet, System.Text.RegularExpressions.GroupCollection path_args)
                 {
                     int varId = int.Parse(path_args["var_id"].Value);
@@ -58,8 +60,6 @@ public class LpsNodeVerifier : MonoBehaviour {
 
         int minIndex = Enumerable.Range(0, distances.Length)
     .Aggregate((a, b) => (distances[a] < distances[b]) ? a : b); // returns 2
-
-        Debug.Log(minIndex);
 
         GameObject node = _lpsManager.getNodeById(minIndex);
 
