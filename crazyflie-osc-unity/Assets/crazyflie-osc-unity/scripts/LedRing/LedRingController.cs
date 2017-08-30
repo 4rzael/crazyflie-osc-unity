@@ -31,34 +31,55 @@ public class LedRingController : MonoBehaviour {
         N_A=13
     };
 
-	// Use this for initialization
-	void Start () {
+    private LedRingController.LedEffect lastEffect;
+    private Color32 lastColor;
+    private bool lastHeadlight;
+
+    // Use this for initialization
+    void Start () {
         droneScript = gameObject.GetComponent<Drone>();
         droneLight = gameObject.GetComponentInChildren<Light>();
+
+        lastEffect = effect;
+        lastColor = color;
+        lastHeadlight = headlight;
+
         droneScript.ConnectionEvent += (Drone drone) =>
         {
-            isConnected = true;
+            SetParams(true);
         };
 
         cooldown = Time.time;
 	}
 
-    void SetParams()
+    void SetParams(bool force=false)
     {
         Debug.LogFormat("COLOR : {0} {1} {2}", color.b, color.g, color.r);
 
-        droneScript.SetParam("ring", "effect", (int)effect);
-        droneScript.SetParam("ring", "solidBlue", (int)color.b);
-        droneScript.SetParam("ring", "solidGreen", (int)color.g);
-        droneScript.SetParam("ring", "solidRed", (int)color.r);
-        droneScript.SetParam("ring", "headlightEnable", headlight ? 1 : 0);
+        if (effect != lastEffect || force)
+        {
+            lastEffect = effect;
+            droneScript.SetParam("ring", "effect", (int)effect);
+        }
+        if ((Color)color != (Color)lastColor || force)
+        {
+            lastColor = color;
+            droneScript.SetParam("ring", "solidBlue", (int)color.b);
+            droneScript.SetParam("ring", "solidGreen", (int)color.g);
+            droneScript.SetParam("ring", "solidRed", (int)color.r);
+        }
+        if (headlight != lastHeadlight || force)
+        {
+            lastHeadlight = headlight;
+            droneScript.SetParam("ring", "headlightEnable", headlight ? 1 : 0);
+        }
     }
 
     private float cooldown;
 
 	// Update is called once per frame
 	void Update () {
-        if (Time.time >= cooldown + 0.1f && isConnected)
+        if (Time.time >= cooldown + 0.1f && droneScript.IsConnected())
         {
             cooldown = Time.time;
             SetParams();

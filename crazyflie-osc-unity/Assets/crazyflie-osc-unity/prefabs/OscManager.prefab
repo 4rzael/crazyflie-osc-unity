@@ -51,13 +51,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41536eaca2fdc2c40a7dc0727d9b8e3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localIP: 10.204.4.62
+  localIP: 127.0.0.1
   localPort: 6006
   servers:
   - name: drones
-    ip: 10.204.4.197
+    ip: 127.0.0.1
     port: 5005
   - name: drones_meta
-    ip: 10.204.4.197
+    ip: 127.0.0.1
     port: 5006
+  - name: specktr
+    ip: 127.0.0.1
+    port: 6100
   shouldPrintDebugMessages: 1
