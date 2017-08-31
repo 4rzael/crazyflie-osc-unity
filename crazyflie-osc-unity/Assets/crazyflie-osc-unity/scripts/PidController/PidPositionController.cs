@@ -53,7 +53,7 @@ public class PidPositionController : MonoBehaviour {
         oscManager = GameObject.Find("OscManager").GetComponent<OscManager>();
         droneScript = gameObject.GetComponent<Drone>();
 
-        _oscClient = oscManager.createClient("drones");
+        _oscClient = oscManager.CreateClient("drones");
 
         // On connection : send params
         gameObject.GetComponent<Drone>().ConnectionEvent += (Drone drone) =>

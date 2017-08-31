@@ -21,7 +21,7 @@ public class LpsNodeVerifier : MonoBehaviour {
         _sceneManager = GameObject.Find("SceneManager").GetComponent<SceneManager>();
         _lpsManager = GameObject.Find("LpsManager").GetComponent<LpsManager>();
 
-        _oscClient = _oscManager.createClient("drones");
+        _oscClient = _oscManager.CreateClient("drones");
 
     }
 
@@ -61,9 +61,9 @@ public class LpsNodeVerifier : MonoBehaviour {
         int minIndex = Enumerable.Range(0, distances.Length)
     .Aggregate((a, b) => (distances[a] < distances[b]) ? a : b); // returns 2
 
-        GameObject node = _lpsManager.getNodeById(minIndex);
+        GameObject node = _lpsManager.GetNodeById(minIndex);
 
-        foreach (GameObject g in Enumerable.Range(0, distances.Length).Where(i => i != minIndex).Select(i => _lpsManager.getNodeById(i)))
+        foreach (GameObject g in Enumerable.Range(0, distances.Length).Where(i => i != minIndex).Select(i => _lpsManager.GetNodeById(i)))
         {
             g.GetComponent<Renderer>().material.color = Color.blue;
         }

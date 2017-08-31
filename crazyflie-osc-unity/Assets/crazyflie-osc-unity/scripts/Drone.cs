@@ -97,7 +97,7 @@ public class Drone : MonoBehaviour
                 this.baseTopic = baseTopic;
 
             _oscManager = GameObject.Find("OscManager").GetComponent<OscManager>();
-            _oscClient = _oscManager.createClient("drones");
+            _oscClient = _oscManager.CreateClient("drones");
 
             #region Link OSC packets to events
             _oscManager.OscSubscribe(string.Format("{0}/{1}/connection", this.baseTopic, this.id),

@@ -56,8 +56,8 @@ public class SceneManager : MonoBehaviour {
             yield break;
         }
 
-		this._drones_osc_client = this._oscManager.createClient ("drones");
-        this._drones_meta_osc_client = this._oscManager.createClient("drones_meta");
+		this._drones_osc_client = this._oscManager.CreateClient ("drones");
+        this._drones_meta_osc_client = this._oscManager.CreateClient("drones_meta");
         this._oscManager.SendOscMessage(this._drones_meta_osc_client,
             "/server/restart",
             1);
@@ -72,7 +72,7 @@ public class SceneManager : MonoBehaviour {
 
         yield return new WaitForSeconds(5);
         print("Sending LPS configs");
-        _lpsManager.sendConfigOsc();
+        _lpsManager.SendConfigOsc();
         yield return new WaitForSeconds(1);
         print("Reseting kalman filters");
         _dronesManager.ResetKalmanFilters();
@@ -90,7 +90,7 @@ public class SceneManager : MonoBehaviour {
 	//}
 
     public void Stop() {
-		this._lpsManager.removeNodes ();
+		this._lpsManager.RemoveNodes ();
 		this._dronesManager.DestroyDronesIfCreated ();
 		this._oscManager.Stop (); // REALLY IMPORTANT => CRASHES ON SECOND LAUNCH IF REMOVED
 	}

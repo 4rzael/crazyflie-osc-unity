@@ -68,7 +68,7 @@ public class OscManager : MonoBehaviour {
     /// </summary>
     /// <param name="server">The server to connect the client to.</param>
     /// <returns></returns>
-    public OSCClient createClient(string server) {
+    public OSCClient CreateClient(string server) {
 		OscManager.DistantOsc oscDestination = this.GetOscDistantServer (server);
 
 		IPAddress ip = IPAddress.Parse(oscDestination.ip);

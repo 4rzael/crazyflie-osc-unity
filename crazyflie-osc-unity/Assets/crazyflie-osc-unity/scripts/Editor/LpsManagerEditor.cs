@@ -15,19 +15,19 @@ class LpsManagerEditor : Editor {
 		}
 
 		if (GUILayout.Button ("Recreate nodes")) {
-			lpsManager.recreateNodes ();
+			lpsManager.RecreateNodes ();
 		}
 
 		if (GUILayout.Button ("Send config through OSC")) {
-			lpsManager.sendConfigOsc ();
+			lpsManager.SendConfigOsc ();
 		}
 
 		if (GUILayout.Button ("Save positions")) {
-			lpsManager.savePositions ();
+			lpsManager.SavePositions ();
 		}
 
 		if (GUILayout.Button ("Remove nodes")) {
-			lpsManager.removeNodes ();
+			lpsManager.RemoveNodes ();
 		}
 
 	}

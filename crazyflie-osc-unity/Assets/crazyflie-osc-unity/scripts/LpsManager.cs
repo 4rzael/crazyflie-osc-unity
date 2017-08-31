@@ -50,7 +50,7 @@ public class LpsManager : MonoBehaviour {
     /// </summary>
     /// <param name="id">The identifier.</param>
     /// <returns></returns>
-    public GameObject getNodeById(int id)
+    public GameObject GetNodeById(int id)
     {
         return _lpsNodes[id];
     }
@@ -58,7 +58,7 @@ public class LpsManager : MonoBehaviour {
     /// <summary>
     /// Removes the LPS nodes GameObjects.
     /// </summary>
-    public void removeNodes () {
+    public void RemoveNodes () {
 		foreach (GameObject node in this._lpsNodes)
 		{
 			if (node != null) {
@@ -72,8 +72,8 @@ public class LpsManager : MonoBehaviour {
     /// <summary>
     /// Recreates the LPS nodes from this manager configuration.
     /// </summary>
-    public void recreateNodes () {
-		this.removeNodes ();
+    public void RecreateNodes () {
+		this.RemoveNodes ();
 		int id = 0;
 		foreach (Vector3 nodePosition in this.lpsNodesPositions)
 		{
@@ -88,7 +88,7 @@ public class LpsManager : MonoBehaviour {
     /// <summary>
     /// Sends the LPS configuration through OSC.
     /// </summary>
-    public void sendConfigOsc () {
+    public void SendConfigOsc () {
 		this.printNodes ();
 		int id = 0;
 		this.oscManager.SendOscMessage (this.oscClient, string.Format("{0}/get_node_number", this.lpsOscTopic), this.lpsNodesPositions.Length);
@@ -102,7 +102,7 @@ public class LpsManager : MonoBehaviour {
     /// <summary>
     /// Get the GameObjects current positions and save them in this manager.
     /// </summary>
-    public void savePositions () {
+    public void SavePositions () {
 		int i = 0;
 		this.cleanNodeList ();
 		foreach (GameObject node in this._lpsNodes) {
@@ -116,11 +116,11 @@ public class LpsManager : MonoBehaviour {
 		this.findNodes ();
 
 		this.oscManager = GameObject.Find ("OscManager").GetComponent<OscManager> ();
-		this.oscClient = this.oscManager.createClient ("drones");
+		this.oscClient = this.oscManager.CreateClient ("drones");
 
 		if (Application.isPlaying) {
 			if (this._lpsNodes.Count < this.lpsNodesPositions.Length)
-				this.recreateNodes ();
+				this.RecreateNodes ();
 		}
 
 	}
