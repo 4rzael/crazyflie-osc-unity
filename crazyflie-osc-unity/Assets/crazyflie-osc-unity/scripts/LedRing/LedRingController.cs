@@ -54,8 +54,6 @@ public class LedRingController : MonoBehaviour {
 
     void SetParams(bool force=false)
     {
-        Debug.LogFormat("COLOR : {0} {1} {2}", color.b, color.g, color.r);
-
         if (effect != lastEffect || force)
         {
             lastEffect = effect;

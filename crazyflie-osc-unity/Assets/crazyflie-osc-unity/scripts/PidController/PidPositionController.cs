@@ -10,6 +10,9 @@ using UnityOSC;
 /// Gives an interface to tune the values of the Position-Control PID in realtime.
 /// </summary>
 public class PidPositionController : MonoBehaviour {
+
+    Drone droneScript;
+
     public struct PidVariable
     {
         public string name;
@@ -48,6 +51,7 @@ public class PidPositionController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         oscManager = GameObject.Find("OscManager").GetComponent<OscManager>();
+        droneScript = gameObject.GetComponent<Drone>();
 
         _oscClient = oscManager.createClient("drones");
 
@@ -72,7 +76,7 @@ public class PidPositionController : MonoBehaviour {
                 float boundedValue = Mathf.Min(Mathf.Max(value, variable.min), variable.max);
                 variable.value = boundedValue;
                 variables[varIndex] = variable;
-                gameObject.GetComponent<Drone>().SetParam("posCtlPid", key, boundedValue);
+                droneScript.SetParam("posCtlPid", key, boundedValue);
             }
         }
     }

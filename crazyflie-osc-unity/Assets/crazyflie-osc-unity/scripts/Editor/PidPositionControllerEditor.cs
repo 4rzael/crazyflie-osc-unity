@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEngine;
 
 [CustomEditor(typeof(PidPositionController))]
 class PidPositionControllerEditor : Editor
@@ -35,8 +36,10 @@ class PidPositionControllerEditor : Editor
                                    variable.value,
                                    variable.min,
                                    variable.max);
-            if (res != variable.value)
-                toChange.Add(new VarToChange(variable.name, variable.value));
+            if (res != variable.value && !float.IsNaN(res))
+            {
+                toChange.Add(new VarToChange(variable.name, res));
+            }
         }
         foreach (VarToChange v in toChange)
         {
