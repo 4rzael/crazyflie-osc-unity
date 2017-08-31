@@ -12,7 +12,6 @@ public class ControlModeFollowHand : ControlMode
         base.start();
 
         trajectoryManager.setTrajectory(TrajectoryManager.TrajectoryType.FOLLOW_POINT);
-        trajectoryManager.getTrajectory().setVariable("speed", 2.0f);
         trajectoryManager.getTrajectory().startTrajectory();
     }
 

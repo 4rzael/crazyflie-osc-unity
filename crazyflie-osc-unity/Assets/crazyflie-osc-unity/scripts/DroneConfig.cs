@@ -23,7 +23,7 @@ public class DroneConfig
 	{
         viz_id = _viz_id;
         is_active = true;
-		radio_uri = "radio://0/80/2M/E7E7E7E7" + (viz_id + 1).ToString("00");
+        radio_uri = string.Format("radio://0/80/2M/E7{0}{0}{0}{0}", (viz_id + 1).ToString("00"));
 		// color = UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f); // cannot be done in constructor
 	}
 }

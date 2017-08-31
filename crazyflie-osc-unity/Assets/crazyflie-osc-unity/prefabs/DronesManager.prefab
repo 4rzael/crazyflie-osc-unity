@@ -56,15 +56,15 @@ MonoBehaviour:
     type: 2}
   droneOscTopic: /crazyflie
   dronesConfigs:
-  - is_active: 0
+  - is_active: 1
     radio_uri: radio://0/40/2M/E701010101
     color: {r: 0.94482756, g: 0, b: 1, a: 1}
     viz_id: 0
-  - is_active: 0
+  - is_active: 1
     radio_uri: radio://0/40/2M/E702020202
     color: {r: 0, g: 0.66896534, b: 1, a: 1}
     viz_id: 1
-  - is_active: 0
+  - is_active: 1
     radio_uri: radio://0/40/2M/E703030303
     color: {r: 0, g: 1, b: 0.2965517, a: 1}
     viz_id: 2
@@ -72,10 +72,18 @@ MonoBehaviour:
     radio_uri: radio://0/80/2M/E704040404
     color: {r: 0.9448277, g: 1, b: 0, a: 1}
     viz_id: 3
-  - is_active: 0
+  - is_active: 1
     radio_uri: radio://0/80/2M/E705050505
     color: {r: 1, g: 0.25735295, b: 0.25735295, a: 1}
     viz_id: 4
+  - is_active: 1
+    radio_uri: radio://0/80/2M/E706060606
+    color: {r: 0, g: 0.93538606, b: 0.5767185, a: 1}
+    viz_id: 5
+  - is_active: 1
+    radio_uri: radio://0/80/2M/E707070707
+    color: {r: 0, g: 0.14636093, b: 0.8121339, a: 1}
+    viz_id: 6
 --- !u!114 &114381449801175988
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -90,5 +98,5 @@ MonoBehaviour:
   effect: 7
   color:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4278190080
   headlight: 0

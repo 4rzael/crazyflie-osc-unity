@@ -20,9 +20,10 @@ public class Controller : MonoBehaviour {
     private OscManager _oscManager;
     private DronesManager _dronesManager;
 
-    #region head drone attributes
-    [SerializeField] private int _headDroneID = -1;
-    private GameObject _headDrone;
+    #region body drone attributes
+    [SerializeField] private Vector3 _bodyDroneOffset = Vector3.zero; // offset between the body drone and hand drone in horizontal posture
+    [SerializeField] private int _bodyDroneID = -1;
+    private GameObject _bodyDrone;
     #endregion
 
     #region hand drone attributes
@@ -31,6 +32,8 @@ public class Controller : MonoBehaviour {
     #endregion
 
     #region computed inputs attributes
+    public float pointingVectorMultiplier = 1.0f;
+
     public Vector3 position = Vector3.zero;
     public Vector3 velocity = Vector3.zero;
     public Vector3 acceleration = Vector3.zero;
@@ -78,7 +81,7 @@ public class Controller : MonoBehaviour {
     #region control mode selection attributes
     private Dictionary<string, Type> _controlModeInputs = new Dictionary<string, Type>
     {
-        {"thumb+2", typeof(ControlModeSampler)},
+        {"thumb+2", typeof(ControlModeFollowHand)},
         {"thumb+3", typeof(ControlModeSlide)},
         {"thumb+4", typeof(ControlModeTakeoff)},
         {"thumb+5", typeof(ControlModeLand)},
@@ -94,17 +97,17 @@ public class Controller : MonoBehaviour {
 
         Debug.Assert(_handDroneID >= 0, "hand drone ID not set");
         _handDrone = _dronesManager.GetDroneGameObjectById(_handDroneID);
-        Debug.Assert(_headDroneID >= 0, "head drone ID not set");
-        _headDrone = _dronesManager.GetDroneGameObjectById(_headDroneID);
+        Debug.Assert(_bodyDroneID >= 0, "body drone ID not set");
+        _bodyDrone = _dronesManager.GetDroneGameObjectById(_bodyDroneID);
 
         _dronesIds = new List<int>(_dronesManager
                            .GetDrones()
                            .Select(d_go => d_go.Id)
-                           .Where(id => id != _handDroneID && id != _headDroneID));
+                           .Where(id => id != _handDroneID && id != _bodyDroneID));
 
         // soft "emergency" : do not need to reboot the drone nor the server
         _handDrone.GetComponent<Drone>().UseAsInput = true;
-        _headDrone.GetComponent<Drone>().UseAsInput = true;
+        _bodyDrone.GetComponent<Drone>().UseAsInput = true;
 
         // Subscribe to the specktr OSC topic
         _oscManager.OscSubscribe(specktrOscTopic, this.onButtons);
@@ -137,11 +140,11 @@ public class Controller : MonoBehaviour {
             }
 
             // compute the pointing vector
-            if (_handDrone != null && _headDrone != null)
+            if (_handDrone != null && _bodyDrone != null)
             {
                 Vector3 handPosition = _handDrone.GetComponent<Drone>().GetRealPosition();
-                Vector3 shoulderPosition = _headDrone.GetComponent<Drone>().GetRealPosition() - new Vector3(0, 0.3f, 0); // 30cm between the head and the shoulders
-                pointingVector = handPosition - shoulderPosition;
+                Vector3 shoulderPosition = _bodyDrone.GetComponent<Drone>().GetRealPosition() + _bodyDroneOffset;
+                pointingVector = (handPosition - shoulderPosition) * pointingVectorMultiplier;
 
                 Debug.DrawLine(handPosition, handPosition + pointingVector, Color.green);
             }
@@ -331,9 +334,9 @@ public class Controller : MonoBehaviour {
         return _handDrone;
     }
 
-    public GameObject GetHeadDrone()
+    public GameObject GetBodyDrone()
     {
-        return _headDrone;
+        return _bodyDrone;
     }
 
 }

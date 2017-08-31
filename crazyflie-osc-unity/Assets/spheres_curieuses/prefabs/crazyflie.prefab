@@ -408,7 +408,7 @@ MonoBehaviour:
   id: -1
   radioUri: 
   UseAsInput: 0
-  PositionEstimationLowPassFilterWindowSize: 10
+  PositionEstimationLowPassFilterWindowSize: 2
 --- !u!114 &114753195127083190
 MonoBehaviour:
   m_ObjectHideFlags: 1

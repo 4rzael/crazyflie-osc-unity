@@ -32,12 +32,12 @@ public class PidPositionController : MonoBehaviour {
 
     public List<PidVariable> variables = new List<PidVariable>()
     {
-        new PidVariable("xKp", 1, 0, 5),
-        new PidVariable("yKp", 1, 0, 5),
-        new PidVariable("zKp", 1, 0, 5),
+        new PidVariable("xKp", 1.5f, 0, 5),
+        new PidVariable("yKp", 1.5f, 0, 5),
+        new PidVariable("zKp", 1.5f, 0, 5),
 
-        new PidVariable("xKi", float.NaN, 0, 5),
-        new PidVariable("yKi", float.NaN, 0, 5),
+        new PidVariable("xKi", 0.25f, 0, 5),
+        new PidVariable("yKi", 0.25f, 0, 5),
         new PidVariable("zKi", 0.5f, 0, 2),
 
         new PidVariable("xKd", float.NaN, 0, 5),
