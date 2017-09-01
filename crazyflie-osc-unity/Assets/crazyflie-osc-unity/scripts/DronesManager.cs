@@ -99,7 +99,10 @@ public class DronesManager : MonoBehaviour {
     /// <param name="id">The identifier.</param>
     /// <returns></returns>
     public Drone GetDroneById(int id) {
-        return GetDroneGameObjectById(id).GetComponent<Drone>();
+        GameObject go = GetDroneGameObjectById(id);
+        if (go == null)
+            return null;
+        return go.GetComponent<Drone>();
     }
     #endregion
 

@@ -188,6 +188,7 @@ public class Drone : MonoBehaviour
 
     /// <summary>
     /// Starts sending goals packets from the position of this gameobject
+    /// If the gameobject position is (0,0,0), it will be moved to the current drone's real position.
     /// </summary>
     public void StartPositionSync() {
         // If the drone gameobject did not move, set it to go a the current real position
