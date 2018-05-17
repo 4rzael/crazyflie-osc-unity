@@ -30,6 +30,6 @@ An example scene is present. (actually, two, but the sphere curieuses may be mor
 
 * Clean the code
 
-* Add documentation
+* Improve the [documentation](https://github.com/4rzael/crazyflie-osc-unity/wiki)
 
 * Make it a Unity package
